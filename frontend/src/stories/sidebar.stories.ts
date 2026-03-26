@@ -111,7 +111,7 @@ export const WithActiveRoute: Story = {
     props: {
       items: NAV_ITEMS,
       collapsed: false,
-      activeRoute: '/perfil',
+  activeRoute: '/',
     },
     template: `
       <div style="height: 100vh; position: relative;">
@@ -143,7 +143,7 @@ export const WithBadges: Story = {
     props: {
       items: NAV_ITEMS_WITH_BADGES,
       collapsed: false,
-      activeRoute: '/perfil',
+  activeRoute: '/',
     },
     template: `
       <div style="height: 100vh; position: relative;">
@@ -175,7 +175,7 @@ export const CollapsedWithBadges: Story = {
     props: {
       items: NAV_ITEMS_WITH_BADGES,
       collapsed: true,
-      activeRoute: '/perfil',
+  activeRoute: '/',
     },
     template: `
       <div style="height: 100vh; position: relative;">
@@ -242,7 +242,7 @@ export const CollapsedWithBadges: Story = {
 class SidebarInteractiveDemoComponent {
   readonly items = NAV_ITEMS_WITH_BADGES;
   collapsed = signal(false);
-  activeRoute = signal('/perfil');
+  activeRoute = signal('/');
 
   onItemClick(item: ISidebarItem): void {
     this.activeRoute.set(item.route);
@@ -317,7 +317,7 @@ export const Interactive: Story = {
 class SidebarMobileDemoComponent {
   readonly items = NAV_ITEMS_WITH_BADGES;
   mobileOpen = signal(true);
-  activeRoute = signal('/perfil');
+  activeRoute = signal('/');
 
   onItemClick(item: ISidebarItem): void {
     this.activeRoute.set(item.route);

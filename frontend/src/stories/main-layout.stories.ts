@@ -44,7 +44,7 @@ const meta: Meta<MainLayoutHostComponent> = {
     layout: 'fullscreen',
   },
   args: {
-    sidebarActiveRoute: '/settings'
+    sidebarActiveRoute: '/'
   }
 };
 
@@ -52,10 +52,10 @@ export default meta;
 type Story = StoryObj<MainLayoutHostComponent>;
 
 const mockSidebarItems = [
-  { icon: 'settings', label: 'Configurações', route: '/settings' },
-  { icon: 'user', label: 'Perfil', route: '/profile' },
-  { icon: 'bell', label: 'Notificações', route: '/notifications', badge: '3' },
-  { icon: 'shield', label: 'Segurança', route: '/security' }
+  { icon: 'house', label: 'Visão Geral', route: '/' },
+  { icon: 'chart-bar', label: 'Relatórios', route: '/relatorios' },
+  { icon: 'bell', label: 'Notificações', route: '/notificacoes', badge: '3' },
+  { icon: 'settings', label: 'Configurações', route: '/configuracoes' }
 ];
 
 export const WithSidebar: Story = {

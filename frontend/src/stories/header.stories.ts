@@ -34,14 +34,14 @@ export const Default: Story = {
 export const WithActiveRoute: Story = {
   name: 'Com rota ativa',
   args: {
-    activeRoute: '/perfil',
+    activeRoute: '/',
   },
 };
 
 export const WithAvatarImage: Story = {
   name: 'Com imagem de avatar',
   args: {
-    activeRoute: '/perfil',
+    activeRoute: '/',
     userAvatar: 'https://i.pravatar.cc/150?img=12',
   },
 };
@@ -49,7 +49,7 @@ export const WithAvatarImage: Story = {
 export const UserMenuOpen: Story = {
   name: 'Menu do usuário aberto',
   args: {
-    activeRoute: '/perfil',
+    activeRoute: '/',
   },
   play: async ({ canvasElement }) => {
     const userBtn = canvasElement.querySelector('.header__user-btn') as HTMLButtonElement;

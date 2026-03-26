@@ -82,8 +82,8 @@ export class MainLayoutComponent implements OnInit {
     // Basic active route matching for the header
     const cleanUrl = url.split('?')[0];
     const segments = cleanUrl.split('/').filter(s => s);
-  this.activeRoute.set(segments.length > 0 ? '/' + segments[0] : '/perfil');
-  this.routeSidebarActiveRoute.set(cleanUrl || '/perfil');
+    this.activeRoute.set(segments.length > 0 ? '/' + segments[0] : '/');
+    this.routeSidebarActiveRoute.set(cleanUrl || '/');
   }
 
   updateSidebarFromRoute(): void {
@@ -118,14 +118,6 @@ export class MainLayoutComponent implements OnInit {
 
   onHeaderNavigate(route: string) {
     this.router.navigate([route]);
-  }
-
-  onProfileClick(): void {
-    this.router.navigate(['/perfil']);
-  }
-
-  onSupportClick(): void {
-    this.router.navigate(['/suporte']);
   }
 
   onMenuClick() {

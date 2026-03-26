@@ -5,11 +5,9 @@ import {
   LUCIDE_ICONS,
   LucideIconProvider,
   ChevronDown,
-  User,
   LogOut,
   Menu,
   X,
-  LifeBuoy,
 } from 'lucide-angular';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
 
@@ -27,11 +25,9 @@ export interface INavItem {
       provide: LUCIDE_ICONS,
       useValue: new LucideIconProvider({
         ChevronDown,
-        User,
         LogOut,
         Menu,
         X,
-        LifeBuoy,
       }),
       multi: true,
     },
@@ -51,9 +47,7 @@ export class HeaderComponent {
 
   readonly navigate = output<{ route: string }>();
   readonly logoClick = output<void>();
-  readonly profileClick = output<void>();
   readonly logoutClick = output<void>();
-  readonly supportClick = output<void>();
   readonly menuClick = output<void>();
 
   readonly userMenuOpen = signal(false);
@@ -76,16 +70,6 @@ export class HeaderComponent {
     } else {
       this.mobileMenuOpen.update(v => !v);
     }
-  }
-
-  onProfileClick(): void {
-    this.profileClick.emit();
-    this.userMenuOpen.set(false);
-  }
-
-  onSupportClick(): void {
-    this.supportClick.emit();
-    this.userMenuOpen.set(false);
   }
 
   onLogoutClick(): void {
