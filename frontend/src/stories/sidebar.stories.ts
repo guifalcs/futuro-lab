@@ -7,21 +7,15 @@ import { AvatarComponent } from '../app/shared/components/avatar/avatar.componen
 // ── Shared data ────────────────────────────────────────────────────────────────
 
 const NAV_ITEMS: ISidebarItem[] = [
-  { icon: 'house', label: 'Dashboard', route: '/dashboard' },
-  { icon: 'users', label: 'Clientes', route: '/clients' },
-  { icon: 'file-text', label: 'Demandas', route: '/tasks' },
-  { icon: 'chart-bar', label: 'Relatórios', route: '/reports' },
-  { icon: 'bell', label: 'Notificações', route: '/notifications' },
-  { icon: 'settings', label: 'Configurações', route: '/settings' },
+  { icon: 'chart-bar', label: 'Relatórios', route: '/relatorios' },
+  { icon: 'bell', label: 'Notificações', route: '/notificacoes' },
+  { icon: 'settings', label: 'Configurações', route: '/configuracoes' },
 ];
 
 const NAV_ITEMS_WITH_BADGES: ISidebarItem[] = [
-  { icon: 'house', label: 'Dashboard', route: '/dashboard' },
-  { icon: 'users', label: 'Clientes', route: '/clients' },
-  { icon: 'file-text', label: 'Demandas', route: '/tasks', badge: '12' },
-  { icon: 'chart-bar', label: 'Relatórios', route: '/reports' },
-  { icon: 'bell', label: 'Notificações', route: '/notifications', badge: '3' },
-  { icon: 'settings', label: 'Configurações', route: '/settings' },
+  { icon: 'chart-bar', label: 'Relatórios', route: '/relatorios' },
+  { icon: 'bell', label: 'Notificações', route: '/notificacoes', badge: '3' },
+  { icon: 'settings', label: 'Configurações', route: '/configuracoes' },
 ];
 
 // ── Meta ───────────────────────────────────────────────────────────────────────
@@ -117,7 +111,7 @@ export const WithActiveRoute: Story = {
     props: {
       items: NAV_ITEMS,
       collapsed: false,
-      activeRoute: '/tasks',
+      activeRoute: '/perfil',
     },
     template: `
       <div style="height: 100vh; position: relative;">
@@ -136,7 +130,7 @@ export const WithActiveRoute: Story = {
           </div>
         </app-sidebar>
         <div style="margin-left: 260px; padding: 32px; color: #9CA3AF; font-family: Inter, sans-serif; font-size: 14px;">
-          Rota ativa: /tasks (item "Demandas" destacado)
+          Rota ativa: /relatorios (item "Relatórios" destacado)
         </div>
       </div>
     `,
@@ -149,7 +143,7 @@ export const WithBadges: Story = {
     props: {
       items: NAV_ITEMS_WITH_BADGES,
       collapsed: false,
-      activeRoute: '/tasks',
+      activeRoute: '/perfil',
     },
     template: `
       <div style="height: 100vh; position: relative;">
@@ -181,7 +175,7 @@ export const CollapsedWithBadges: Story = {
     props: {
       items: NAV_ITEMS_WITH_BADGES,
       collapsed: true,
-      activeRoute: '/tasks',
+      activeRoute: '/perfil',
     },
     template: `
       <div style="height: 100vh; position: relative;">
@@ -248,7 +242,7 @@ export const CollapsedWithBadges: Story = {
 class SidebarInteractiveDemoComponent {
   readonly items = NAV_ITEMS_WITH_BADGES;
   collapsed = signal(false);
-  activeRoute = signal('/dashboard');
+  activeRoute = signal('/perfil');
 
   onItemClick(item: ISidebarItem): void {
     this.activeRoute.set(item.route);
@@ -323,7 +317,7 @@ export const Interactive: Story = {
 class SidebarMobileDemoComponent {
   readonly items = NAV_ITEMS_WITH_BADGES;
   mobileOpen = signal(true);
-  activeRoute = signal('/dashboard');
+  activeRoute = signal('/perfil');
 
   onItemClick(item: ISidebarItem): void {
     this.activeRoute.set(item.route);

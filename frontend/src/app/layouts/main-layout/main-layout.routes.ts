@@ -7,68 +7,6 @@ export const MAIN_LAYOUT_ROUTES: Routes = [
     component: MainLayoutComponent,
     children: [
       {
-        path: 'dashboard',
-        loadComponent: () => import('../../features/dashboard/dashboard.component').then(m => m.DashboardComponent)
-      },
-      {
-        path: 'tarefas',
-        loadComponent: () => import('../../features/tarefas/tarefas.component').then(m => m.TarefasComponent)
-      },
-      {
-        path: 'clientes',
-        data: {
-          sidebarItems: [
-            { icon: 'building-2', label: 'Todos os Clientes', route: '/clientes' },
-            { icon: 'plus', label: 'Novo Cliente', route: '/clientes/novo' }
-          ]
-        },
-        children: [
-          {
-            path: '',
-            loadComponent: () => import('../../features/clients/client-list/client-list.component').then(m => m.ClientListComponent)
-          },
-          {
-            path: 'novo',
-            loadComponent: () => import('../../features/clients/client-create/client-create.component').then(m => m.ClientCreateComponent)
-          },
-          {
-            path: ':id',
-            loadComponent: () => import('../../features/clients/client-view/client-view.component').then(m => m.ClientViewComponent)
-          },
-          {
-            path: ':id/editar',
-            loadComponent: () => import('../../features/clients/client-edit/client-edit.component').then(m => m.ClientEditComponent)
-          }
-        ]
-      },
-      {
-        path: 'equipe',
-        data: {
-          sidebarItems: [
-            { icon: 'users', label: 'Todos os Colaboradores', route: '/equipe' },
-            { icon: 'user-plus', label: 'Novo Colaborador', route: '/equipe/novo' }
-          ]
-        },
-        children: [
-          {
-            path: '',
-            loadComponent: () => import('../../features/team/team-list/team-list.component').then(m => m.TeamListComponent)
-          },
-          {
-            path: 'novo',
-            loadComponent: () => import('../../features/team/team-create/team-create.component').then(m => m.TeamCreateComponent)
-          },
-          {
-            path: ':id',
-            loadComponent: () => import('../../features/team/team-view/team-view.component').then(m => m.TeamViewComponent)
-          },
-          {
-            path: ':id/editar',
-            loadComponent: () => import('../../features/team/team-edit/team-edit.component').then(m => m.TeamEditComponent)
-          }
-        ]
-      },
-      {
         path: 'perfil',
         data: {
           sidebarItems: [
@@ -122,7 +60,7 @@ export const MAIN_LAYOUT_ROUTES: Routes = [
       },
       {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'perfil',
         pathMatch: 'full'
       }
     ]

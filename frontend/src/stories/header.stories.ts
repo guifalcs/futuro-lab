@@ -4,12 +4,7 @@ import { HeaderComponent, INavItem } from '../app/layouts/header/header.componen
 
 // ── Meta ───────────────────────────────────────────────────────────────────────
 
-const defaultNavItems: INavItem[] = [
-  { label: 'Dashboard', route: '/dashboard' },
-  { label: 'Tarefas', route: '/tarefas' },
-  { label: 'Clientes', route: '/clientes' },
-  { label: 'Equipe', route: '/equipe' },
-];
+const defaultNavItems: INavItem[] = [];
 
 const meta: Meta<HeaderComponent> = {
   title: 'Layouts/Header',
@@ -39,14 +34,14 @@ export const Default: Story = {
 export const WithActiveRoute: Story = {
   name: 'Com rota ativa',
   args: {
-    activeRoute: '/tarefas',
+    activeRoute: '/perfil',
   },
 };
 
 export const WithAvatarImage: Story = {
   name: 'Com imagem de avatar',
   args: {
-    activeRoute: '/dashboard',
+    activeRoute: '/perfil',
     userAvatar: 'https://i.pravatar.cc/150?img=12',
   },
 };
@@ -54,7 +49,7 @@ export const WithAvatarImage: Story = {
 export const UserMenuOpen: Story = {
   name: 'Menu do usuário aberto',
   args: {
-    activeRoute: '/dashboard',
+    activeRoute: '/perfil',
   },
   play: async ({ canvasElement }) => {
     const userBtn = canvasElement.querySelector('.header__user-btn') as HTMLButtonElement;

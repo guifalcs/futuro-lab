@@ -7,7 +7,7 @@ import { Component, computed, input } from '@angular/core';
   styleUrl: './footer.component.scss',
 })
 export class FooterComponent {
-  companyName = input<string>('Status Contabilidade');
+  companyName = input<string>('FuturoLab');
   version = input<string>('');
   logoSrc = input<string>('assets/images/logoRebuild.png');
 

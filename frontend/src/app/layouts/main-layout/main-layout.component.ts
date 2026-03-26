@@ -57,12 +57,7 @@ export class MainLayoutComponent implements OnInit {
   });
 
   // Header Mock Data
-  navItems = signal([
-    { label: 'Dashboard', route: '/dashboard', icon: 'layout-dashboard' },
-    { label: 'Tarefas', route: '/tarefas', icon: 'clipboard-list' },
-    { label: 'Clientes', route: '/clientes', icon: 'building-2' },
-    { label: 'Equipe', route: '/equipe', icon: 'users' }
-  ]);
+  navItems = signal([] as { label: string; route: string; icon: string }[]);
   userName = signal('Sirlene Sales');
   userAvatar = signal('');
   logoSrc = signal('assets/images/logo.webp');
@@ -87,8 +82,8 @@ export class MainLayoutComponent implements OnInit {
     // Basic active route matching for the header
     const cleanUrl = url.split('?')[0];
     const segments = cleanUrl.split('/').filter(s => s);
-    this.activeRoute.set(segments.length > 0 ? '/' + segments[0] : '/dashboard');
-    this.routeSidebarActiveRoute.set(cleanUrl || '/dashboard');
+  this.activeRoute.set(segments.length > 0 ? '/' + segments[0] : '/perfil');
+  this.routeSidebarActiveRoute.set(cleanUrl || '/perfil');
   }
 
   updateSidebarFromRoute(): void {
