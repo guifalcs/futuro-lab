@@ -1,14 +1,14 @@
 
-# Design System — Status Contabilidade
+# Design System — FuturoLab
 
 > Referência visual do projeto. Consultar antes de criar qualquer componente.
 > Componentes existentes estão em `frontend/src/app/shared/components/`.
 > Stories visuais no Storybook: `cd frontend && npm run storybook`
-> Estilo: moderno, limpo, inspirado em shadcn/ui. Foco em espaço, hierarquia e micro-interações.
+> Estilo: moderno, limpo, inspirado em shadcn/ui. Foco em espaço, hierarquia e micro-interações. Plataforma LIMS para laboratórios de análises ambientais.
 
 ## Cores
 
-### Primárias (derivadas da marca Status)
+### Primárias (FuturoLab)
 
 * **Primary:** `#1D6AA5` — azul principal (botões, links, elementos de destaque)
 * **Primary Hover:** `#185A8C` — hover de botões e links
@@ -229,9 +229,9 @@
 * Mensagens de erro abaixo do campo, em vermelho, font caption
 * Campos obrigatórios com asterisco vermelho no label
 
-### Lista de tarefas
-
-* Cards interativos em lista vertical
-* Badge de status visível no card
-* Indicador de prazo com cor (verde, amarelo, vermelho)
-* Ação rápida hover (editar, abrir) sem precisar clicar primeiro
+### Lista / Data Grid
+- Tabela com filtros por coluna no header
+- Badge de status visível na linha
+- Paginação no rodapé
+- Ações em toolbar no topo (Criar, Editar, Visualizar, Exportar)
+- Linhas selecionáveis com checkbox
