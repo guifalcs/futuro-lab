@@ -1,40 +1,33 @@
-# Regras de Negócio — {{CLIENT_NAME}}
 
-> Este documento é a fonte de verdade para as regras de negócio do projeto.
-> Deve ser consultado antes de implementar qualquer feature que envolva lógica de domínio.
-> Atualizar sempre que uma regra for adicionada ou alterada.
+# FuturoLab — Regras de Negócio
 
-## Entidades Principais
+> Este documento é preenchido incrementalmente conforme feedback do cliente.
+> Cada seção é expandida quando o módulo correspondente for desenvolvido.
 
-### {{Entidade 1}}
-- Descrição:
-- Campos:
-- Regras:
+## Domínio
 
-### {{Entidade 2}}
-- Descrição:
-- Campos:
-- Regras:
+Laboratório de análises ambientais (água, solo, ar). Conformidade com ISO/IEC 17025:2017.
 
-## Fluxos de Negócio
+## Entidades
 
-### {{Fluxo 1}}
-- Gatilho:
-- Passos:
-- Resultado esperado:
-- Exceções:
+*(definir conforme módulos forem construídos)*
+
+## Fluxos
+
+*(definir conforme módulos forem construídos)*
 
 ## Perfis de Usuário
 
-### {{Perfil 1}}
-- Permissões:
-- Restrições:
-- Visibilidade:
+*(definir conforme módulos forem construídos)*
 
-## Regras de Prazo
+## Legislação Aplicável
 
-<!-- Documentar aqui regras de SLA, prazos de entrega, alertas -->
+* ISO/IEC 17025:2017 — Competência de laboratórios de ensaio
+* CONAMA 357/2005 — Classificação de corpos de água
+* CONAMA 430/2011 — Padrões de lançamento de efluentes
+* Portaria GM/MS 888/2021 — Potabilidade da água
+* Lei 15.190/2025 — Lei Geral do Licenciamento Ambiental
 
-## Notificações
+## Decisões do Cliente
 
-<!-- Documentar quando e para quem o sistema deve notificar -->
+*(registrar aqui decisões tomadas em reuniões com o cliente)*
