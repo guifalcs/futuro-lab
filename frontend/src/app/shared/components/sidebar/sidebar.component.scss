@@ -1,0 +1,280 @@
+@use '../../../shared/styles/variables' as v;
+
+  .sidebar {
+  position: relative; // Removed fixed so it naturally fits into the layout flexbox
+  left: 0;
+  top: 0;
+  height: 100%; // Fit parent
+  width: 260px;
+  background: v.$background-secondary;
+  border-right: 1px solid v.$border;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: width 200ms ease;
+  z-index: 100;
+  font-family: v.$font-family;
+
+  &--collapsed {
+    width: 64px;
+  }
+
+  @media (max-width: 767px) {
+    position: fixed; // Back to fixed on mobile only
+    width: 260px;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 300ms ease;
+    z-index: 1001;
+
+    &--mobile-open {
+      transform: translateX(0);
+    }
+  }
+
+  // ── Header ──────────────────────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 12px;
+    gap: 8px;
+    min-height: 64px;
+    flex-shrink: 0;
+
+    .sidebar--collapsed & {
+      justify-content: center;
+      padding: 16px 0;
+    }
+  }
+
+  &__logo {
+    flex: 1;
+    overflow: hidden;
+    opacity: 1;
+    transition: opacity 200ms ease;
+    white-space: nowrap;
+
+    .sidebar--collapsed & {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+      display: none;
+    }
+  }
+
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: v.$radius-md;
+    cursor: pointer;
+    color: v.$muted-foreground;
+    transition: v.$transition-fast;
+
+    &:hover {
+      background: v.$accent;
+      color: v.$accent-foreground;
+    }
+
+    @media (max-width: 767px) {
+      display: none;
+    }
+  }
+
+  // ── Navigation ──────────────────────────────────────────────
+  &__nav {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px 0;
+    scrollbar-width: thin;
+    scrollbar-color: v.$border transparent;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: v.$border;
+      border-radius: v.$radius-full;
+    }
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__section-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: v.$text-muted;
+    padding: 16px 12px 8px 12px;
+    margin-top: 4px;
+
+    &--collapsed {
+      padding: 16px 0 8px 0;
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  &__divider {
+    width: 24px;
+    height: 1px;
+    background-color: v.$border;
+    border: none;
+    margin: 0 auto;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: v.$radius-md;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: v.$font-family;
+    font-size: 14px;
+    font-weight: 500;
+    color: v.$text-primary;
+    gap: 12px;
+    text-align: left;
+    white-space: nowrap;
+    transition: background-color 150ms ease, color 150ms ease;
+
+    &:hover {
+      background: v.$accent;
+    }
+
+    &--active {
+      background: v.$primary-light;
+      color: v.$primary;
+
+      .sidebar__icon {
+        color: v.$primary;
+      }
+    }
+  }
+
+  // ── Icon ────────────────────────────────────────────────────
+  &__icon-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  &__icon {
+    display: block;
+    color: v.$text-muted;
+
+    .sidebar__item--active & {
+      color: v.$primary;
+    }
+  }
+
+  // ── Label ───────────────────────────────────────────────────
+  &__label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    animation: sidebar-label-appear 120ms ease both;
+  }
+
+  // ── Badge pill (visible when expanded) ──────────────────────
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: v.$primary;
+    color: v.$primary-foreground;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: v.$radius-full;
+    flex-shrink: 0;
+    overflow: hidden;
+    animation: sidebar-label-appear 120ms ease both;
+  }
+
+  // ── Badge dot (visible when collapsed) ──────────────────────
+  &__badge-dot {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 8px;
+    height: 8px;
+    background: v.$primary;
+    border-radius: v.$radius-full;
+    border: 2px solid v.$background-secondary;
+    opacity: 0;
+    transition: opacity 200ms ease;
+
+    .sidebar--collapsed & {
+      opacity: 1;
+    }
+  }
+
+  // ── Footer ──────────────────────────────────────────────────
+  &__footer {
+    padding: 12px 8px;
+    border-top: 1px solid v.$border;
+    flex-shrink: 0;
+  }
+}
+
+// ── Overlay (mobile) ────────────────────────────────────────────
+.sidebar__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 199;
+  animation: sidebar-overlay-in 300ms ease both;
+}
+
+@keyframes sidebar-label-appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sidebar-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

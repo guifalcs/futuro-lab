@@ -1,0 +1,48 @@
+<div
+  class="checkbox"
+  [class.checkbox--disabled]="disabled()"
+  (click)="toggle()"
+  (keydown)="onKeydown($event)"
+  role="checkbox"
+  [attr.aria-checked]="isIndeterminate() ? 'mixed' : checked()"
+  [attr.aria-disabled]="disabled()"
+  tabindex="0"
+>
+  <div
+    class="checkbox__box"
+    [class.checkbox__box--checked]="checked()"
+    [class.checkbox__box--indeterminate]="isIndeterminate()"
+    [class.checkbox__box--error]="hasError() && !checked() && !isIndeterminate()"
+    [class.checkbox__box--disabled]="disabled()"
+  >
+    @if (checked()) {
+      <lucide-angular class="checkbox__icon" name="check" [size]="14" />
+    } @else if (isIndeterminate()) {
+      <lucide-angular class="checkbox__icon" name="minus" [size]="14" />
+    }
+  </div>
+
+  <div class="checkbox__content">
+    @if (hasLabel()) {
+      <span class="checkbox__label" [class.checkbox__label--disabled]="disabled()">
+        {{ label() }}
+      </span>
+    }
+    @if (hasDescription()) {
+      <span class="checkbox__description">{{ description() }}</span>
+    }
+  </div>
+
+  <input
+    class="sr-only"
+    type="checkbox"
+    [id]="inputId"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    aria-hidden="true"
+  />
+</div>
+
+@if (hasError()) {
+  <span class="checkbox__error" role="alert">{{ error() }}</span>
+}

@@ -1,0 +1,66 @@
+@use '../../shared/styles/variables' as var;
+
+.main-layout-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+}
+
+.main-layout-middle {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.main-sidebar {
+  position: sticky;
+  top: 64px; /* Assume placeholder ou calc(header height) */
+  height: calc(100vh - 64px); /* Sidebar agora vai até o fim da tela ao lado do footer */
+  overflow-y: auto;
+  z-index: 1002;
+}
+
+.sidebar-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var.$text-primary;
+  padding-left: 4px;
+}
+
+.main-layout-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* Previne que flex children excedam tela */
+  background-color: var.$background-secondary;
+  position: relative;
+  z-index: 0;
+}
+
+.main-layout-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container {
+  padding: 24px 32px;
+  flex: 1;
+
+  @media (max-width: 768px) {
+    padding: 16px;
+  }
+}
+
+.main-footer {
+  width: 100%;
+  margin-top: auto;
+}

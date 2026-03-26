@@ -1,0 +1,169 @@
+@use '../../../shared/styles/variables' as v;
+
+.ticket-view {
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$text-muted;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: v.$transition-fast;
+
+    &:hover {
+      color: v.$primary;
+    }
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-family: v.$font-family;
+    font-size: 24px;
+    font-weight: 600;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  &__id {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin-top: 4px;
+  }
+
+  &__badges {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+    margin-bottom: 32px;
+  }
+
+  &__card {
+    display: block;
+    max-width: 720px;
+    margin-bottom: 24px;
+  }
+
+  &__card-title {
+    font-family: v.$font-family;
+    font-size: 16px;
+    font-weight: 500;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  &__description {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-primary;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    margin: 0;
+  }
+
+  &__info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  &__info-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__info-label {
+    font-family: v.$font-family;
+    font-size: 12px;
+    font-weight: 500;
+    color: v.$text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__info-value {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-primary;
+
+    &--mono {
+      font-family: monospace;
+      font-size: 13px;
+    }
+  }
+
+  // Replies placeholder
+  &__replies-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    text-align: center;
+  }
+
+  &__replies-icon {
+    color: v.$text-muted;
+  }
+
+  &__replies-text {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin: 12px 0 0;
+  }
+
+  // Not found
+  &__not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+  }
+
+  &__not-found-icon {
+    color: v.$text-muted;
+  }
+
+  &__not-found-title {
+    font-family: v.$font-family;
+    font-size: 20px;
+    font-weight: 600;
+    color: v.$text-primary;
+    margin: 16px 0 0;
+  }
+
+  &__not-found app-button {
+    margin-top: 24px;
+  }
+}
+
+// Responsive - Mobile
+@media (max-width: 767px) {
+  .ticket-view {
+    &__header {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    &__card {
+      max-width: 100%;
+    }
+
+    &__info-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+}

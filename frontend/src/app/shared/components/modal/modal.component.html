@@ -1,0 +1,36 @@
+@if (isOpen()) {
+  <div
+    class="modal-overlay"
+    role="presentation"
+    tabindex="0"
+    (click)="onOverlayClick($event)"
+    (keydown)="trapFocus($event)"
+  >
+    <div
+      class="modal-panel"
+      [ngClass]="'modal-panel--' + size()"
+      role="dialog"
+      [attr.aria-label]="title()"
+      aria-modal="true"
+    >
+      <div class="modal-panel__header">
+        <h2 class="modal-panel__title">{{ title() }}</h2>
+        @if (showCloseButton()) {
+          <app-button variant="ghost" size="icon" (clicked)="close()">
+            <lucide-angular name="x" [size]="16" [strokeWidth]="1.75" />
+          </app-button>
+        }
+      </div>
+
+      <div class="modal-panel__body">
+        <ng-content />
+      </div>
+
+      @if (hasFooter()) {
+        <div class="modal-panel__footer">
+          <ng-content select="[appModalFooter]" />
+        </div>
+      }
+    </div>
+  </div>
+}

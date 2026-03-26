@@ -1,0 +1,44 @@
+<div class="main-layout-wrapper">
+  <!-- HEADER GLOBAL (Fixo no topo) -->
+  <app-header
+    class="main-header"
+    [navItems]="navItems()"
+    [userName]="userName()"
+    [userAvatar]="userAvatar()"
+    [logoSrc]="logoSrc()"
+    [activeRoute]="activeRoute()"
+    [showMenuButton]="showSidebar()"
+    (navigate)="onHeaderNavigate($event.route)"
+    (profileClick)="onProfileClick()"
+    (supportClick)="onSupportClick()"
+    (menuClick)="onMenuClick()">
+  </app-header>
+
+  <!-- MIDDLE: SIDEBAR + CONTEUDO -->
+  <div class="main-layout-middle">
+    @if (showSidebar()) {
+      <app-sidebar
+        class="main-sidebar"
+        [items]="effectiveSidebarItems()"
+  [activeRoute]="resolvedSidebarActiveRoute()"
+        [(collapsed)]="sidebarCollapsed"
+        [(mobileOpen)]="sidebarMobileOpen"
+        (itemClick)="onSidebarNavigate($event.route)"
+        (toggleCollapse)="toggleSidebar()">
+        <div sidebar-logo class="sidebar-title">Menu</div>
+      </app-sidebar>
+    }
+
+    <!-- CONTEÚDO DIR (Router Outlet e Footer espremidos) -->
+    <div class="main-layout-right" [class.no-sidebar]="!showSidebar()">
+      <main class="main-layout-content">
+        <div class="content-container">
+          <router-outlet></router-outlet>
+        </div>
+      </main>
+
+      <!-- FIXO NO RODAPÉ -->
+      <app-footer class="main-footer"></app-footer>
+    </div>
+  </div>
+</div>

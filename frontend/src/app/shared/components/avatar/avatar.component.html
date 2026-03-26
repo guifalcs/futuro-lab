@@ -1,0 +1,12 @@
+<div class="avatar-container avatar-{{ size() }}" [style.background-color]="showInitials() ? backgroundColor() : '#E5E7EB'">
+  @if (showImage()) {
+    <img [src]="src()" [alt]="name()" (error)="handleImageError()" class="avatar-image">
+  } @else if (showInitials()) {
+    <span class="avatar-initials">{{ initials() }}</span>
+  } @else {
+    <lucide-angular [name]="'User'" class="avatar-fallback"></lucide-angular>
+  }
+  @if (status()) {
+    <div class="avatar-status status-{{ status() }}"></div>
+  }
+</div>

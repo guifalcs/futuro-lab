@@ -1,0 +1,49 @@
+@use '../../../shared/styles/variables' as v;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: v.$radius-full;
+  padding: 2px 10px;
+  font-family: v.$font-family;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+
+  // Sizes
+  &--sm {
+    height: 20px;
+  }
+
+  &--md {
+    height: 24px;
+  }
+
+  // Variants
+  &--success {
+    background-color: v.$success-light;
+    color: v.$success;
+  }
+
+  &--warning {
+    background-color: v.$warning-light;
+    color: v.$warning;
+  }
+
+  &--danger {
+    background-color: v.$error-light;
+    color: v.$error;
+  }
+
+  &--info {
+    background-color: v.$info-light;
+    color: v.$info;
+  }
+
+  &--neutral {
+    background-color: v.$muted;
+    color: v.$text-secondary;
+  }
+}

@@ -1,0 +1,153 @@
+<div class="ticket-list">
+  <!-- Header -->
+  <div class="ticket-list__header">
+    <div class="ticket-list__header-left">
+      <h1 class="ticket-list__title">Suporte</h1>
+      <p class="ticket-list__subtitle">Seus tickets de suporte e reportes de problemas</p>
+    </div>
+    <div class="ticket-list__header-right">
+      <app-button variant="default" (clicked)="navigateToNew()">
+        <lucide-angular name="plus" [size]="16" [strokeWidth]="1.75" />
+        Novo Ticket
+      </app-button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <app-card padding="sm" class="ticket-list__filters-card">
+    <div class="ticket-list__filters">
+      <div class="ticket-list__filter ticket-list__filter--search">
+        <app-input
+          type="text"
+          placeholder="Buscar por título..."
+          [(value)]="searchQuery"
+        />
+      </div>
+      <div class="ticket-list__filter ticket-list__filter--status">
+        <app-multi-select
+          placeholder="Todos os status"
+          [options]="statusOptions"
+          [(value)]="statusFilter"
+        />
+      </div>
+      <div class="ticket-list__filter ticket-list__filter--priority">
+        <app-multi-select
+          placeholder="Todas as prioridades"
+          [options]="priorityOptions"
+          [(value)]="priorityFilter"
+        />
+      </div>
+    </div>
+  </app-card>
+
+  <!-- Table -->
+  <app-card padding="none" class="ticket-list__table-card">
+    @if (filteredTickets().length > 0) {
+      <!-- Desktop table -->
+      <div class="ticket-list__table-wrapper">
+        <app-table
+          [columns]="tableColumns"
+          [data]="filteredTicketsAsRecords()"
+          [paginated]="true"
+          [pageSize]="10"
+          emptyMessage="Nenhum ticket encontrado"
+          (rowClick)="onView($any($event.row).id)"
+        >
+          <ng-template appTableCell="title" let-row>
+            <div class="ticket-list__title-cell">
+              <span class="ticket-list__ticket-title">{{ row['title'] }}</span>
+              <span class="ticket-list__ticket-date">{{ formatDate(row['createdAt']) }}</span>
+            </div>
+          </ng-template>
+
+          <ng-template appTableCell="category" let-row>
+            <app-badge
+              [variant]="getCategoryBadge(row['category']).variant"
+              [text]="getCategoryBadge(row['category']).text"
+            />
+          </ng-template>
+
+          <ng-template appTableCell="priority" let-row>
+            @if (row['priority'] === 'high') {
+              <span class="ticket-list__priority-high">
+                <app-badge variant="warning" [text]="getPriorityBadge(row['priority']).text" />
+              </span>
+            } @else {
+              <app-badge
+                [variant]="getPriorityBadge(row['priority']).variant"
+                [text]="getPriorityBadge(row['priority']).text"
+              />
+            }
+          </ng-template>
+
+          <ng-template appTableCell="module" let-row>
+            <span class="ticket-list__module">{{ capitalizeModule(row['affectedModule']) }}</span>
+          </ng-template>
+
+          <ng-template appTableCell="status" let-row>
+            <app-badge
+              [variant]="getStatusBadge(row['status']).variant"
+              [text]="getStatusBadge(row['status']).text"
+            />
+          </ng-template>
+
+          <ng-template appTableCell="actions" let-row>
+            <app-button variant="ghost" size="icon" appTooltip="Visualizar" (clicked)="onView(row['id'])">
+              <lucide-angular name="eye" [size]="16" [strokeWidth]="1.75" class="ticket-list__action-icon" />
+            </app-button>
+          </ng-template>
+        </app-table>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="ticket-list__mobile-cards">
+        @for (ticket of filteredTickets(); track ticket.id) {
+          <div class="ticket-list__mobile-card">
+            <div class="ticket-list__mobile-card-top">
+              <span class="ticket-list__ticket-title">{{ ticket.title }}</span>
+              <span class="ticket-list__ticket-date">{{ formatDate(ticket.createdAt) }}</span>
+            </div>
+            <div class="ticket-list__mobile-card-badges">
+              <app-badge
+                [variant]="getCategoryBadge(ticket.category).variant"
+                [text]="getCategoryBadge(ticket.category).text"
+              />
+              @if (ticket.priority === 'high') {
+                <span class="ticket-list__priority-high">
+                  <app-badge variant="warning" [text]="getPriorityBadge(ticket.priority).text" />
+                </span>
+              } @else {
+                <app-badge
+                  [variant]="getPriorityBadge(ticket.priority).variant"
+                  [text]="getPriorityBadge(ticket.priority).text"
+                />
+              }
+              <app-badge
+                [variant]="getStatusBadge(ticket.status).variant"
+                [text]="getStatusBadge(ticket.status).text"
+              />
+            </div>
+            <span class="ticket-list__module">{{ capitalizeModule(ticket.affectedModule) }}</span>
+            <div class="ticket-list__mobile-card-actions">
+              <app-button variant="ghost" size="icon" appTooltip="Visualizar" (clicked)="onView(ticket.id)">
+                <lucide-angular name="eye" [size]="16" [strokeWidth]="1.75" class="ticket-list__action-icon" />
+              </app-button>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty state -->
+      <div class="ticket-list__empty">
+        <lucide-angular name="life-buoy" [size]="48" [strokeWidth]="1.5" class="ticket-list__empty-icon" />
+        <p class="ticket-list__empty-title">Nenhum ticket encontrado</p>
+        <p class="ticket-list__empty-subtitle">Você ainda não reportou nenhum problema. Se encontrar algo errado, abra um ticket!</p>
+      </div>
+    }
+  </app-card>
+
+  <!-- Result count -->
+  <p class="ticket-list__count">
+    Exibindo {{ filteredCount() }} de {{ totalCount() }} tickets
+  </p>
+</div>

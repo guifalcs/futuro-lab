@@ -1,0 +1,39 @@
+@if (hasLabel()) {
+  <label class="textarea__label" [for]="inputId">
+    {{ label() }}
+    @if (required()) {
+      <span class="textarea__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<textarea
+  class="textarea__field"
+  [class.textarea__field--error]="hasError()"
+  [class.textarea__field--disabled]="disabled()"
+  [id]="inputId"
+  [rows]="rows()"
+  [placeholder]="placeholder()"
+  [attr.disabled]="disabled() ? '' : null"
+  [attr.required]="required() ? '' : null"
+  [attr.aria-invalid]="hasError() ? true : null"
+  [attr.aria-describedby]="hasError() ? inputId + '-error' : null"
+  [style.resize]="resize()"
+  [value]="value()"
+  (input)="onInput($event)"
+  (focus)="onFocus()"
+  (blur)="onBlur()"
+></textarea>
+
+@if (hasError() || maxLength() !== null) {
+  <div class="textarea__footer">
+    @if (hasError()) {
+      <span class="textarea__error" role="alert" [id]="inputId + '-error'">{{ error() }}</span>
+    }
+    @if (maxLength() !== null) {
+      <span class="textarea__counter" [class.textarea__counter--over]="isOverLimit()">
+        {{ charCount() }} / {{ maxLength() }}
+      </span>
+    }
+  </div>
+}

@@ -1,0 +1,185 @@
+<div class="ticket-create">
+  <!-- Back button -->
+  <button type="button" class="ticket-create__back" (click)="goBack()">
+    <lucide-angular name="arrow-left" [size]="20" [strokeWidth]="1.75" />
+    Voltar para tickets
+  </button>
+
+  <!-- Header -->
+  <div class="ticket-create__header">
+    <h1 class="ticket-create__title">Novo Ticket</h1>
+    <p class="ticket-create__subtitle">
+      Descreva o problema com o máximo de detalhes para agilizar a resolução.
+    </p>
+  </div>
+
+  <!-- Card 1: Detalhes do Problema -->
+  <app-card class="ticket-create__card">
+    <div appCardHeader>
+      <h2 class="ticket-create__card-title">Detalhes do Problema</h2>
+    </div>
+
+    <div class="ticket-create__form">
+      <!-- Título -->
+      <div class="ticket-create__field">
+        <app-input
+          label="Título"
+          placeholder="Resumo curto do problema (ex: Tabela não carrega ao filtrar)"
+          [required]="true"
+          [(value)]="ticketTitle"
+          [error]="titleError()"
+        />
+      </div>
+
+      <!-- Linha: Categoria + Prioridade + Módulo -->
+      <div class="ticket-create__row ticket-create__row--three">
+        <div class="ticket-create__field">
+          <app-select
+            label="Categoria"
+            placeholder="Selecione"
+            [options]="categoryOptions"
+            [required]="true"
+            [(value)]="category"
+            [error]="categoryError()"
+          />
+        </div>
+        <div class="ticket-create__field">
+          <app-select
+            label="Prioridade"
+            placeholder="Selecione"
+            [options]="priorityOptions"
+            [required]="true"
+            [(value)]="priority"
+            [error]="priorityError()"
+          />
+        </div>
+        <div class="ticket-create__field">
+          <app-select
+            label="Módulo afetado"
+            placeholder="Selecione"
+            [options]="moduleOptions"
+            [required]="true"
+            [(value)]="affectedModule"
+            [error]="moduleError()"
+          />
+        </div>
+      </div>
+
+      <!-- Descrição -->
+      <div class="ticket-create__field">
+        <app-textarea
+          label="Descrição detalhada"
+          [placeholder]="'Descreva o problema com detalhes:\n\n1. O que aconteceu?\n2. O que você esperava que acontecesse?\n3. Quais passos realizou antes do problema?\n4. O erro acontece sempre ou às vezes?'"
+          [required]="true"
+          [rows]="8"
+          [maxLength]="2000"
+          [(value)]="description"
+          [error]="descriptionError()"
+        />
+        <span class="ticket-create__help-text">{{ descriptionHelp() }}</span>
+      </div>
+
+      <!-- Anexos -->
+      <div class="ticket-create__field">
+        <label class="ticket-create__label">Anexos (opcional)</label>
+        <div
+          class="ticket-create__dropzone"
+          [class.ticket-create__dropzone--active]="isDragging()"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)"
+          (click)="fileInput.click()"
+        >
+          <lucide-angular name="upload" [size]="32" [strokeWidth]="1.5" class="ticket-create__dropzone-icon" />
+          <span class="ticket-create__dropzone-text">Arraste arquivos aqui ou clique para selecionar</span>
+          <span class="ticket-create__dropzone-hint">PNG, JPG, PDF até 5MB cada. Máximo 5 arquivos.</span>
+          <input
+            #fileInput
+            type="file"
+            accept="image/png, image/jpeg, application/pdf"
+            multiple
+            class="ticket-create__file-input"
+            (change)="onFileSelect($event)"
+          />
+        </div>
+
+        @if (selectedFiles().length > 0) {
+          <div class="ticket-create__file-list">
+            @for (f of selectedFiles(); track f.id) {
+              <div class="ticket-create__file-item">
+                @if (isImage(f) && f.previewUrl) {
+                  <img [src]="f.previewUrl" [alt]="f.file.name" class="ticket-create__file-thumb" />
+                } @else if (isImage(f)) {
+                  <lucide-angular name="image" [size]="20" [strokeWidth]="1.5" class="ticket-create__file-icon" />
+                } @else {
+                  <lucide-angular name="file-text" [size]="20" [strokeWidth]="1.5" class="ticket-create__file-icon" />
+                }
+                <span class="ticket-create__file-name">{{ f.file.name }}</span>
+                <span class="ticket-create__file-size">{{ formatFileSize(f.file.size) }}</span>
+                <button type="button" class="ticket-create__file-remove" (click)="removeFile(f.id)">
+                  <lucide-angular name="x" [size]="14" [strokeWidth]="1.75" />
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </app-card>
+
+  <!-- Card 2: Informações do Sistema -->
+  <app-card class="ticket-create__card">
+    <div appCardHeader>
+      <div class="ticket-create__card-header-row">
+        <h2 class="ticket-create__card-title">Informações do Sistema</h2>
+        <app-badge variant="neutral" text="Preenchido automaticamente" />
+      </div>
+    </div>
+
+    <div class="ticket-create__system-info">
+      <div class="ticket-create__info-field">
+        <span class="ticket-create__info-label">Navegador</span>
+        <span class="ticket-create__info-value">{{ browserInfo() }}</span>
+      </div>
+      <div class="ticket-create__info-field">
+        <span class="ticket-create__info-label">Resolução da tela</span>
+        <span class="ticket-create__info-value">{{ screenResolution() }}</span>
+      </div>
+      <div class="ticket-create__info-field">
+        <span class="ticket-create__info-label">Data e hora</span>
+        <span class="ticket-create__info-value">{{ currentDateTime() }}</span>
+      </div>
+      <div class="ticket-create__info-field">
+        <span class="ticket-create__info-label">Usuário</span>
+        <span class="ticket-create__info-value">{{ currentUser() }}</span>
+      </div>
+    </div>
+  </app-card>
+
+  <!-- Footer -->
+  <div class="ticket-create__footer">
+    <app-button variant="outline" (clicked)="onCancel()">Cancelar</app-button>
+    <app-button variant="default" [loading]="submitLoading()" (clicked)="onSubmit()">
+      Enviar ticket
+    </app-button>
+  </div>
+</div>
+
+<!-- Discard confirmation modal -->
+<app-modal
+  [isOpen]="discardModalOpen()"
+  title="Descartar ticket?"
+  size="sm"
+  (closed)="closeDiscardModal()"
+>
+  <p class="ticket-create__modal-text">
+    Os dados preenchidos serão perdidos.
+  </p>
+
+  <div appModalFooter>
+    <div class="ticket-create__modal-footer">
+      <app-button variant="outline" (clicked)="closeDiscardModal()">Continuar editando</app-button>
+      <app-button variant="destructive" (clicked)="confirmDiscard()">Descartar</app-button>
+    </div>
+  </div>
+</app-modal>

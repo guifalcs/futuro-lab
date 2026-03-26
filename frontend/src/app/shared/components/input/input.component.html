@@ -1,0 +1,30 @@
+@if (hasLabel()) {
+  <label class="input__label" [for]="inputId">
+    {{ label() }}
+    @if (required()) {
+      <span class="input__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<input
+  class="input__field"
+  [class.input__field--error]="hasError()"
+  [class.input__field--disabled]="disabled()"
+  [id]="inputId"
+  [type]="type()"
+  [placeholder]="placeholder()"
+  [attr.disabled]="disabled() ? '' : null"
+  [attr.required]="required() ? '' : null"
+  [attr.aria-invalid]="hasError() ? true : null"
+  [attr.aria-describedby]="hasError() ? inputId + '-error' : null"
+  [attr.maxlength]="maxLength() ?? null"
+  [value]="value()"
+  (input)="onInput($event)"
+  (focus)="onFocus()"
+  (blur)="onBlur()"
+/>
+
+@if (hasError()) {
+  <span class="input__error" role="alert" [id]="inputId + '-error'">{{ error() }}</span>
+}

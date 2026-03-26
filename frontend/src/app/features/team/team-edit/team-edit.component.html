@@ -1,0 +1,171 @@
+@if (notFound()) {
+  <!-- Not Found State -->
+  <div class="team-edit__not-found">
+    <lucide-angular name="user-x" [size]="48" [strokeWidth]="1.5" class="team-edit__not-found-icon" />
+    <h2 class="team-edit__not-found-title">Colaborador não encontrado</h2>
+    <p class="team-edit__not-found-text">O colaborador que você está procurando não existe ou foi removido.</p>
+    <app-button variant="default" (clicked)="goBack()">Voltar para equipe</app-button>
+  </div>
+} @else if (collaborator(); as collab) {
+  <div class="team-edit">
+    <!-- Back button -->
+    <button type="button" class="team-edit__back" (click)="onBackClick()">
+      <lucide-angular name="arrow-left" [size]="20" [strokeWidth]="1.75" />
+      Voltar para equipe
+    </button>
+
+    <!-- Header -->
+    <div class="team-edit__header">
+      <div class="team-edit__header-left">
+        <app-avatar size="lg" [name]="collab.name" [status]="collab.presence" />
+        <div class="team-edit__header-info">
+          <h1 class="team-edit__title">{{ collab.name }}</h1>
+          <p class="team-edit__email">{{ collab.email }}</p>
+          <div class="team-edit__header-badges">
+            @if (collab.status === 'active') {
+              <app-badge variant="success" text="Ativo" />
+            } @else {
+              <app-badge variant="danger" text="Inativo" />
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Card -->
+    <app-card class="team-edit__card">
+      <div appCardHeader>
+        <h2 class="team-edit__card-title">Editar Colaborador</h2>
+      </div>
+
+      <div class="team-edit__form">
+        <!-- Nome -->
+        <div class="team-edit__field">
+          <app-input
+            label="Nome completo"
+            placeholder="Nome completo"
+            [required]="true"
+            [(value)]="name"
+            [error]="nameError()"
+          />
+        </div>
+
+        <!-- E-mail (disabled) -->
+        <div class="team-edit__field">
+          <app-input
+            label="E-mail"
+            type="email"
+            [disabled]="true"
+            [(value)]="email"
+          />
+          <p class="team-edit__help">O e-mail não pode ser alterado.</p>
+        </div>
+
+        <!-- Cargo -->
+        <div class="team-edit__field">
+          <app-select
+            label="Cargo"
+            placeholder="Selecione o cargo"
+            [options]="roles"
+            [required]="true"
+            [(value)]="role"
+            [error]="roleError()"
+          />
+        </div>
+
+        <!-- Departamento -->
+        <div class="team-edit__field">
+          <app-select
+            label="Departamento"
+            placeholder="Selecione o departamento"
+            [options]="departments"
+            [required]="true"
+            [(value)]="department"
+            [error]="departmentError()"
+          />
+        </div>
+      </div>
+
+      <div appCardFooter>
+        <div class="team-edit__footer">
+          <div class="team-edit__footer-left">
+            @if (isActive()) {
+              <app-button variant="ghost" (clicked)="openStatusModal()" class="team-edit__status-btn--danger">
+                <lucide-angular name="user-x" [size]="16" [strokeWidth]="1.75" />
+                Desativar colaborador
+              </app-button>
+            } @else {
+              <app-button variant="ghost" (clicked)="openStatusModal()" class="team-edit__status-btn--success">
+                <lucide-angular name="user-check" [size]="16" [strokeWidth]="1.75" />
+                Reativar colaborador
+              </app-button>
+            }
+          </div>
+          <div class="team-edit__footer-right">
+            <app-button variant="outline" (clicked)="onCancel()">Cancelar</app-button>
+            <app-button variant="default" [loading]="submitLoading()" (clicked)="onSubmit()">
+              Salvar alterações
+            </app-button>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- Status change modal -->
+  <app-modal
+    [isOpen]="statusModalOpen()"
+    [title]="isActive() ? 'Desativar colaborador' : 'Reativar colaborador'"
+    size="sm"
+    (closed)="closeStatusModal()"
+  >
+    <div class="team-edit__modal-body">
+      @if (isActive()) {
+        <lucide-angular name="alert-triangle" [size]="32" [strokeWidth]="1.75" class="team-edit__modal-icon team-edit__modal-icon--warning" />
+        <p class="team-edit__modal-text">
+          Tem certeza que deseja desativar <strong>{{ collab.name }}</strong>?
+          Ele não poderá mais acessar a plataforma.
+        </p>
+      } @else {
+        <lucide-angular name="user-check" [size]="32" [strokeWidth]="1.75" class="team-edit__modal-icon team-edit__modal-icon--success" />
+        <p class="team-edit__modal-text">
+          Deseja reativar o acesso de <strong>{{ collab.name }}</strong> à plataforma?
+        </p>
+      }
+    </div>
+
+    <div appModalFooter>
+      <div class="team-edit__modal-footer">
+        <app-button variant="outline" (clicked)="closeStatusModal()">Cancelar</app-button>
+        @if (isActive()) {
+          <app-button variant="destructive" [loading]="statusModalLoading()" (clicked)="confirmStatusChange()">
+            Desativar
+          </app-button>
+        } @else {
+          <app-button variant="default" [loading]="statusModalLoading()" (clicked)="confirmStatusChange()">
+            Reativar
+          </app-button>
+        }
+      </div>
+    </div>
+  </app-modal>
+
+  <!-- Discard confirmation modal -->
+  <app-modal
+    [isOpen]="discardModalOpen()"
+    title="Descartar alterações?"
+    size="sm"
+    (closed)="closeDiscardModal()"
+  >
+    <p class="team-edit__modal-text">
+      Você tem alterações não salvas. Deseja descartar e voltar para a listagem?
+    </p>
+
+    <div appModalFooter>
+      <div class="team-edit__modal-footer">
+        <app-button variant="outline" (clicked)="closeDiscardModal()">Continuar editando</app-button>
+        <app-button variant="destructive" (clicked)="confirmDiscard()">Descartar</app-button>
+      </div>
+    </div>
+  </app-modal>
+}

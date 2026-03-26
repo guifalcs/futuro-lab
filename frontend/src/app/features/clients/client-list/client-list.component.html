@@ -1,0 +1,212 @@
+<div class="client-list">
+  <!-- Header -->
+  <div class="client-list__header">
+    <div class="client-list__header-left">
+      <h1 class="client-list__title">Clientes</h1>
+      <p class="client-list__subtitle">Gerencie as empresas clientes do escritório</p>
+    </div>
+    <div class="client-list__header-right">
+      <app-button variant="default" (clicked)="navigateToNew()">
+        <lucide-angular name="plus" [size]="16" [strokeWidth]="1.75" />
+        Novo cliente
+      </app-button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <app-card padding="sm" class="client-list__filters-card">
+    <div class="client-list__filters">
+      <div class="client-list__filter client-list__filter--search">
+        <app-input
+          type="text"
+          placeholder="Buscar por nome ou CNPJ..."
+          [(value)]="searchQuery"
+        />
+      </div>
+      <div class="client-list__filter client-list__filter--regime">
+        <app-multi-select
+          placeholder="Todos os regimes"
+          [options]="taxRegimeOptions"
+          [(value)]="taxRegimeFilter"
+        />
+      </div>
+      <div class="client-list__filter client-list__filter--status">
+        <app-multi-select
+          placeholder="Todos os status"
+          [options]="statusOptions"
+          [(value)]="statusFilter"
+        />
+      </div>
+    </div>
+  </app-card>
+
+  <!-- Table -->
+  <app-card padding="none" class="client-list__table-card">
+    @if (filteredClients().length > 0) {
+      <!-- Desktop/Tablet table -->
+      <div class="client-list__table-wrapper">
+        <app-table
+          [columns]="tableColumns"
+          [data]="filteredClientsAsRecords()"
+          [paginated]="true"
+          [pageSize]="10"
+          [emptyMessage]="'Nenhum cliente encontrado'"
+          (rowClick)="onView($any($event.row).id)"
+        >
+          <ng-template appTableCell="client" let-row>
+            <div class="client-list__client-info">
+              <span class="client-list__client-name">{{ row['tradeName'] }}</span>
+              <span class="client-list__client-cnpj">{{ row['cnpj'] }}</span>
+            </div>
+          </ng-template>
+
+          <ng-template appTableCell="taxRegime" let-row>
+            <app-badge [variant]="getTaxRegimeBadgeVariant(row['taxRegime'])" [text]="row['taxRegime']" />
+          </ng-template>
+
+          <ng-template appTableCell="responsible" let-row>
+            <div class="client-list__responsible-info">
+              <app-avatar size="sm" [name]="row['responsibleName']" />
+              <span class="client-list__responsible-name">{{ row['responsibleName'] }}</span>
+            </div>
+          </ng-template>
+
+          <ng-template appTableCell="employeeCount" let-row>
+            {{ row['employeeCount'] }}
+          </ng-template>
+
+          <ng-template appTableCell="status" let-row>
+            @if (row['status'] === 'active') {
+              <app-badge variant="success" text="Ativo" />
+            } @else {
+              <app-badge variant="danger" text="Inativo" />
+            }
+          </ng-template>
+
+          <ng-template appTableCell="actions" let-row>
+            <div class="client-list__actions">
+              <app-button variant="ghost" size="icon" appTooltip="Visualizar" (clicked)="onView(row['id'])">
+                <lucide-angular name="eye" [size]="16" [strokeWidth]="1.75" class="client-list__action-icon" />
+              </app-button>
+              <app-button variant="ghost" size="icon" appTooltip="Editar" (clicked)="onEdit(row['id'])">
+                <lucide-angular name="pencil" [size]="16" [strokeWidth]="1.75" class="client-list__action-icon" />
+              </app-button>
+              @if (row['status'] === 'active') {
+                <app-button variant="ghost" size="icon" appTooltip="Desativar" (clicked)="openStatusModalFromRow(row)">
+                  <lucide-angular [img]="banIcon" [size]="16" [strokeWidth]="1.75" class="client-list__action-icon client-list__action-icon--danger" />
+                </app-button>
+              } @else {
+                <app-button variant="ghost" size="icon" appTooltip="Reativar" (clicked)="openStatusModalFromRow(row)">
+                  <lucide-angular [img]="building2Icon" [size]="16" [strokeWidth]="1.75" class="client-list__action-icon client-list__action-icon--success" />
+                </app-button>
+              }
+            </div>
+          </ng-template>
+        </app-table>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="client-list__mobile-cards">
+        @for (client of filteredClients(); track client.id) {
+          <div class="client-list__mobile-card">
+            <div class="client-list__mobile-card-top">
+              <div class="client-list__mobile-card-identity">
+                <span class="client-list__client-name">{{ client.tradeName }}</span>
+                <span class="client-list__client-cnpj">{{ client.cnpj }}</span>
+              </div>
+              <div class="client-list__mobile-card-status">
+                @if (client.status === 'active') {
+                  <app-badge variant="success" text="Ativo" />
+                } @else {
+                  <app-badge variant="danger" text="Inativo" />
+                }
+              </div>
+            </div>
+            <div class="client-list__mobile-card-badges">
+              <app-badge [variant]="getTaxRegimeBadgeVariant(client.taxRegime)" [text]="client.taxRegime" />
+            </div>
+            <div class="client-list__mobile-card-responsible">
+              <app-avatar size="sm" [name]="client.responsibleName" />
+              <span class="client-list__responsible-name">{{ client.responsibleName }}</span>
+            </div>
+            <div class="client-list__mobile-card-actions">
+              <app-button variant="ghost" size="icon" appTooltip="Visualizar" (clicked)="onView(client.id)">
+                <lucide-angular name="eye" [size]="16" [strokeWidth]="1.75" class="client-list__action-icon" />
+              </app-button>
+              <app-button variant="ghost" size="icon" appTooltip="Editar" (clicked)="onEdit(client.id)">
+                <lucide-angular name="pencil" [size]="16" [strokeWidth]="1.75" class="client-list__action-icon" />
+              </app-button>
+              @if (client.status === 'active') {
+                <app-button variant="ghost" size="icon" appTooltip="Desativar" (clicked)="openStatusModal(client)">
+                  <lucide-angular [img]="banIcon" [size]="16" [strokeWidth]="1.75" class="client-list__action-icon client-list__action-icon--danger" />
+                </app-button>
+              } @else {
+                <app-button variant="ghost" size="icon" appTooltip="Reativar" (clicked)="openStatusModal(client)">
+                  <lucide-angular [img]="building2Icon" [size]="16" [strokeWidth]="1.75" class="client-list__action-icon client-list__action-icon--success" />
+                </app-button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty state -->
+      <div class="client-list__empty">
+        <lucide-angular name="building-2" [size]="48" [strokeWidth]="1.5" class="client-list__empty-icon" />
+        <p class="client-list__empty-title">Nenhum cliente encontrado</p>
+        <p class="client-list__empty-subtitle">Tente ajustar os filtros de busca</p>
+      </div>
+    }
+  </app-card>
+
+  <!-- Result count -->
+  <p class="client-list__count">
+    Exibindo {{ filteredCount() }} de {{ totalCount() }} clientes
+  </p>
+
+  <!-- Status Change Modal -->
+  <app-modal
+    [isOpen]="statusModalOpen()"
+    [title]="isDeactivating() ? 'Desativar cliente' : 'Reativar cliente'"
+    (closed)="closeStatusModal()"
+  >
+    <div class="client-list__modal-content">
+      <div class="client-list__modal-icon-wrapper" [class.client-list__modal-icon-wrapper--danger]="isDeactivating()">
+        <lucide-angular
+          [img]="isDeactivating() ? banIcon : building2Icon"
+          [size]="24"
+          [strokeWidth]="2"
+        />
+      </div>
+      <div class="client-list__modal-text">
+        <p class="client-list__modal-title">
+          @if (isDeactivating()) {
+            Tem certeza que deseja desativar <strong>{{ selectedClient()?.tradeName }}</strong>?
+          } @else {
+            Deseja reativar <strong>{{ selectedClient()?.tradeName }}</strong>?
+          }
+        </p>
+        <p class="client-list__modal-description">
+          @if (isDeactivating()) {
+            As tarefas em andamento serão mantidas mas novas demandas não poderão ser criadas.
+          } @else {
+            O cliente terá suas demandas reativadas imediatamente.
+          }
+        </p>
+      </div>
+    </div>
+
+    <div appModalFooter>
+      <app-button variant="ghost" (clicked)="closeStatusModal()">
+        Cancelar
+      </app-button>
+      <app-button
+        [variant]="isDeactivating() ? 'destructive' : 'default'"
+        [loading]="statusModalLoading()"
+        (clicked)="confirmStatusChange()"
+      >
+        {{ isDeactivating() ? 'Sim, desativar' : 'Sim, reativar' }}
+      </app-button>
+    </div>
+  </app-modal>
+</div>

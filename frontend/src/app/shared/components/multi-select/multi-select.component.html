@@ -1,0 +1,89 @@
+@if (hasLabel()) {
+  <label class="multi-select__label" [for]="inputId">
+    {{ label() }}
+  </label>
+}
+
+<div class="multi-select__trigger">
+  <button
+    [id]="inputId"
+    type="button"
+    class="multi-select__button"
+    [class.multi-select__button--disabled]="disabled()"
+    [class.multi-select__button--open]="isOpen()"
+    [attr.disabled]="disabled() ? '' : null"
+    [attr.aria-expanded]="isOpen()"
+    aria-haspopup="listbox"
+    (click)="toggleDropdown()"
+    (focus)="onFocus()"
+    (blur)="onBlur()"
+  >
+    @if (hasSelection()) {
+      <span class="multi-select__tags">
+        @for (opt of selectedLabels(); track opt.value) {
+          <span class="multi-select__tag">
+            <span class="multi-select__tag-text">{{ opt.label }}</span>
+            <span
+              class="multi-select__tag-remove"
+              role="button"
+              tabindex="-1"
+              (click)="removeValue(opt.value, $event)"
+            >
+              <lucide-angular name="x" [size]="12" [strokeWidth]="2" />
+            </span>
+          </span>
+        }
+      </span>
+    } @else {
+      <span class="multi-select__placeholder">{{ placeholder() }}</span>
+    }
+
+    <div class="multi-select__actions">
+      @if (hasSelection()) {
+        <span
+          class="multi-select__clear"
+          role="button"
+          tabindex="-1"
+          (click)="clearAll($event)"
+        >
+          <lucide-angular name="x" [size]="14" [strokeWidth]="2" />
+        </span>
+      }
+      <lucide-angular
+        name="chevron-down"
+        class="multi-select__chevron"
+        [class.multi-select__chevron--open]="isOpen()"
+        [size]="16"
+      />
+    </div>
+  </button>
+
+  @if (isOpen()) {
+    <div class="multi-select__dropdown">
+      <ul class="multi-select__list" role="listbox" aria-multiselectable="true">
+        @for (opt of options(); track opt.value; let i = $index) {
+          <li
+            [id]="inputId + '-option-' + i"
+            class="multi-select__option"
+            [class.multi-select__option--selected]="isSelected(opt.value)"
+            [class.multi-select__option--highlighted]="i === highlightedIndex()"
+            role="option"
+            [attr.tabindex]="i === highlightedIndex() ? 0 : -1"
+            [attr.aria-selected]="isSelected(opt.value)"
+            (click)="toggleOption(opt); $event.stopPropagation()"
+            (keydown.enter)="toggleOption(opt)"
+            (keydown.space)="toggleOption(opt); $event.preventDefault()"
+            (mouseenter)="highlightedIndex.set(i)"
+          >
+            <span class="multi-select__checkbox" [class.multi-select__checkbox--checked]="isSelected(opt.value)">
+              @if (isSelected(opt.value)) {
+                <lucide-angular name="check" [size]="12" [strokeWidth]="2.5" />
+              }
+            </span>
+            <span>{{ opt.label }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  }
+</div>

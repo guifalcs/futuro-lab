@@ -1,0 +1,97 @@
+@use '../../../shared/styles/variables' as v;
+
+:host {
+  display: block;
+}
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  &__box {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid v.$border;
+    border-radius: 4px;
+    background-color: v.$background;
+    transition: v.$transition-fast;
+    outline: none;
+
+    &:focus-visible {
+      box-shadow: 0 0 0 3px v.$ring;
+    }
+
+    &--checked,
+    &--indeterminate {
+      background-color: v.$primary;
+      border-color: v.$primary;
+    }
+
+    &--error {
+      border-color: v.$error;
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &__icon {
+    color: v.$primary-foreground;
+    display: flex;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__label {
+    font-family: v.$font-family;
+    font-size: 14px;
+    font-weight: 500;
+    color: v.$text-primary;
+
+    &--disabled {
+      color: v.$text-muted;
+    }
+  }
+
+  &__description {
+    font-family: v.$font-family;
+    font-size: 12px;
+    color: v.$text-muted;
+  }
+
+  &__error {
+    font-family: v.$font-family;
+    font-size: 12px;
+    color: v.$error;
+    margin-top: 4px;
+    padding-left: 30px;
+  }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

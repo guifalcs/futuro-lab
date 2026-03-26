@@ -1,0 +1,266 @@
+<div class="client-create">
+  <!-- Back button -->
+  <button type="button" class="client-create__back" (click)="goBack()">
+    <lucide-angular name="arrow-left" [size]="20" [strokeWidth]="1.75" />
+    Voltar para clientes
+  </button>
+
+  <!-- Header -->
+  <div class="client-create__header">
+    <h1 class="client-create__title">Novo Cliente</h1>
+    <p class="client-create__subtitle">
+      Cadastre uma nova empresa cliente no escritório.
+    </p>
+  </div>
+
+  <!-- Card 1: Dados da Empresa -->
+  <app-card class="client-create__card">
+    <div appCardHeader>
+      <h2 class="client-create__card-title">Dados da Empresa</h2>
+    </div>
+
+    <div class="client-create__form">
+      <div class="client-create__row">
+        <div class="client-create__field client-create__field--half" #errorField>
+          <app-input
+            label="Razão Social"
+            placeholder="Ex: Empresa Exemplo Ltda"
+            [required]="true"
+            [(value)]="companyName"
+            [error]="companyNameError()"
+          />
+        </div>
+        <div class="client-create__field client-create__field--half" #errorField>
+          <app-input
+            label="Nome Fantasia"
+            placeholder="Ex: Empresa Exemplo"
+            [required]="true"
+            [(value)]="tradeName"
+            [error]="tradeNameError()"
+          />
+        </div>
+      </div>
+
+      <div class="client-create__row">
+        <div class="client-create__field client-create__field--half" #errorField>
+          <app-input
+            label="CNPJ"
+            placeholder="00.000.000/0001-00"
+            [required]="true"
+            [maxLength]="18"
+            [(value)]="cnpj"
+            [error]="cnpjError()"
+          />
+        </div>
+        <div class="client-create__field client-create__field--half">
+          <app-input
+            label="Inscrição Estadual"
+            placeholder="Opcional"
+            [(value)]="stateRegistration"
+          />
+        </div>
+      </div>
+
+      <div class="client-create__row">
+        <div class="client-create__field client-create__field--half" #errorField>
+          <app-select
+            label="Regime Tributário"
+            placeholder="Selecione o regime"
+            [options]="taxRegimeOptions"
+            [required]="true"
+            [(value)]="taxRegime"
+            [error]="taxRegimeError()"
+          />
+        </div>
+        <div class="client-create__field client-create__field--half">
+          <app-input
+            label="CNAE Principal"
+            placeholder="Ex: 4691-5/00"
+            [(value)]="mainCnae"
+          />
+        </div>
+      </div>
+
+      <div class="client-create__row">
+        <div class="client-create__field client-create__field--half">
+          <app-input
+            label="Cliente desde"
+            placeholder="dd/mm/aaaa"
+            [(value)]="clientSince"
+          />
+        </div>
+        <div class="client-create__field client-create__field--half">
+          <app-input
+            label="Nº de Funcionários"
+            type="number"
+            placeholder="0"
+            [(value)]="employeeCount"
+          />
+        </div>
+      </div>
+    </div>
+  </app-card>
+
+  <!-- Card 2: Contato e Endereço -->
+  <app-card class="client-create__card">
+    <div appCardHeader>
+      <h2 class="client-create__card-title">Contato e Endereço</h2>
+    </div>
+
+    <div class="client-create__form">
+      <!-- Contato -->
+      <div class="client-create__row client-create__row--three">
+        <div class="client-create__field">
+          <app-input
+            label="Telefone"
+            placeholder="(31) 3821-1234"
+            [(value)]="phone"
+          />
+        </div>
+        <div class="client-create__field">
+          <app-input
+            label="WhatsApp"
+            placeholder="(31) 99876-5432"
+            [(value)]="whatsapp"
+          />
+        </div>
+        <div class="client-create__field" #errorField>
+          <app-input
+            label="E-mail"
+            type="email"
+            placeholder="contato@empresa.com.br"
+            [required]="true"
+            [(value)]="email"
+            [error]="emailError()"
+          />
+        </div>
+      </div>
+
+      <!-- Divisor -->
+      <div class="client-create__divider">
+        <span class="client-create__section-label">Endereço</span>
+      </div>
+
+      <div class="client-create__row">
+        <div class="client-create__field client-create__field--half">
+          <div class="client-create__cep-wrapper">
+            <app-input
+              label="CEP"
+              placeholder="00000-000"
+              [(value)]="zipCode"
+              (blurred)="onCepBlur()"
+            />
+            @if (cepLoading()) {
+              <span class="client-create__cep-spinner"></span>
+            }
+          </div>
+        </div>
+        <div class="client-create__field client-create__field--half">
+          <app-input
+            label="Rua"
+            placeholder="Rua, Avenida..."
+            [(value)]="street"
+          />
+        </div>
+      </div>
+
+      <div class="client-create__row client-create__row--three">
+        <div class="client-create__field client-create__field--number">
+          <app-input
+            label="Número"
+            placeholder="Nº"
+            [(value)]="addressNumber"
+          />
+        </div>
+        <div class="client-create__field">
+          <app-input
+            label="Complemento"
+            placeholder="Sala, andar..."
+            [(value)]="complement"
+          />
+        </div>
+        <div class="client-create__field">
+          <app-input
+            label="Bairro"
+            placeholder="Bairro"
+            [(value)]="neighborhood"
+          />
+        </div>
+      </div>
+
+      <div class="client-create__row">
+        <div class="client-create__field client-create__field--half">
+          <app-input
+            label="Cidade"
+            placeholder="Cidade"
+            [(value)]="city"
+          />
+        </div>
+        <div class="client-create__field client-create__field--uf">
+          <app-select
+            label="UF"
+            placeholder="UF"
+            [options]="stateOptions"
+            [(value)]="state"
+          />
+        </div>
+      </div>
+    </div>
+  </app-card>
+
+  <!-- Card 3: Vínculo e Observações -->
+  <app-card class="client-create__card">
+    <div appCardHeader>
+      <h2 class="client-create__card-title">Vínculo Interno</h2>
+    </div>
+
+    <div class="client-create__form">
+      <div class="client-create__field" #errorField>
+        <app-select
+          label="Responsável"
+          placeholder="Selecione o responsável"
+          [options]="responsibleOptions"
+          [required]="true"
+          [(value)]="responsibleId"
+          [error]="responsibleError()"
+        />
+      </div>
+      <div class="client-create__field">
+        <app-textarea
+          label="Observações"
+          placeholder="Notas internas sobre o cliente..."
+          [rows]="4"
+          [maxLength]="500"
+          [(value)]="notes"
+        />
+      </div>
+    </div>
+  </app-card>
+
+  <!-- Footer -->
+  <div class="client-create__footer">
+    <app-button variant="outline" (clicked)="onCancel()">Cancelar</app-button>
+    <app-button variant="default" [loading]="submitLoading()" (clicked)="onSubmit()">
+      Cadastrar cliente
+    </app-button>
+  </div>
+</div>
+
+<!-- Discard confirmation modal -->
+<app-modal
+  [isOpen]="discardModalOpen()"
+  title="Descartar alterações?"
+  size="sm"
+  (closed)="closeDiscardModal()"
+>
+  <p class="client-create__modal-text">
+    Você tem dados preenchidos que não foram salvos. Deseja descartar e voltar para a listagem?
+  </p>
+
+  <div appModalFooter>
+    <div class="client-create__modal-footer">
+      <app-button variant="outline" (clicked)="closeDiscardModal()">Continuar editando</app-button>
+      <app-button variant="destructive" (clicked)="confirmDiscard()">Descartar</app-button>
+    </div>
+  </div>
+</app-modal>

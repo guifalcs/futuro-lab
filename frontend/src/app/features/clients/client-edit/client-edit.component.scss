@@ -1,0 +1,303 @@
+@use '../../../shared/styles/variables' as v;
+
+.client-edit {
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$text-muted;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: v.$transition-fast;
+
+    &:hover {
+      color: v.$primary;
+    }
+  }
+
+  &__header {
+    display: flex;
+    margin-bottom: 32px;
+  }
+
+  &__header-left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__header-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__title {
+    font-family: v.$font-family;
+    font-size: 24px;
+    font-weight: 600;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  &__cnpj {
+    font-family: v.$font-mono;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin: 4px 0 0;
+  }
+
+  &__card {
+    display: block;
+    max-width: 720px;
+    margin-bottom: 24px;
+  }
+
+  &__card-title {
+    font-family: v.$font-family;
+    font-size: 16px;
+    font-weight: 500;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__row {
+    display: flex;
+    gap: 16px;
+
+    &--three {
+      > .client-edit__field {
+        flex: 1;
+        min-width: 0;
+      }
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+
+    &--half {
+      flex: 1;
+      min-width: 0;
+    }
+
+    &--number {
+      width: 120px;
+      flex-shrink: 0;
+    }
+
+    &--uf {
+      width: 120px;
+      flex-shrink: 0;
+    }
+  }
+
+  &__help {
+    font-family: v.$font-family;
+    font-size: 12px;
+    color: v.$text-muted;
+    margin: 4px 0 0;
+  }
+
+  &__divider {
+    border-top: 1px solid v.$border;
+    margin: 24px 0;
+    padding-top: 0;
+  }
+
+  &__section-label {
+    display: block;
+    font-family: v.$font-family;
+    font-size: 14px;
+    font-weight: 500;
+    color: v.$text-secondary;
+    margin-top: 16px;
+  }
+
+  // Footer
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 720px;
+    margin-top: 24px;
+  }
+
+  &__footer-left {
+    display: flex;
+  }
+
+  &__footer-right {
+    display: flex;
+    gap: 8px;
+  }
+
+  &__status-btn--danger {
+    ::ng-deep .button {
+      color: v.$error;
+
+      &:hover {
+        color: v.$error;
+        background: v.$error-light;
+      }
+    }
+  }
+
+  &__status-btn--success {
+    ::ng-deep .button {
+      color: v.$success;
+
+      &:hover {
+        color: v.$success;
+        background: v.$success-light;
+      }
+    }
+  }
+
+  // Modal
+  &__modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__modal-icon {
+    &--warning {
+      color: v.$warning;
+    }
+
+    &--success {
+      color: v.$success;
+    }
+  }
+
+  &__modal-text {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-secondary;
+    margin: 16px 0 0;
+    line-height: 1.5;
+  }
+
+  &__modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  // Not found
+  &__not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+  }
+
+  &__not-found-icon {
+    color: v.$text-muted;
+  }
+
+  &__not-found-title {
+    font-family: v.$font-family;
+    font-size: 20px;
+    font-weight: 600;
+    color: v.$text-primary;
+    margin: 16px 0 0;
+  }
+
+  &__not-found-text {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin: 4px 0 0;
+  }
+
+  &__not-found app-button {
+    margin-top: 24px;
+  }
+}
+
+// Responsive — Tablet
+@media (max-width: 1024px) {
+  .client-edit {
+    &__row--three {
+      flex-wrap: wrap;
+
+      > .client-edit__field {
+        flex: 1 1 calc(50% - 8px);
+        min-width: 0;
+      }
+
+      > .client-edit__field--number {
+        flex: 0 0 120px;
+      }
+    }
+  }
+}
+
+// Responsive — Mobile
+@media (max-width: 768px) {
+  .client-edit {
+    &__header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    &__card {
+      max-width: 100%;
+
+      ::ng-deep .card--padding-md {
+        padding: 16px;
+      }
+    }
+
+    &__row,
+    &__row--three {
+      flex-direction: column;
+      gap: 20px;
+
+      > .client-edit__field--number,
+      > .client-edit__field--uf {
+        width: 100%;
+      }
+    }
+
+    &__footer {
+      flex-direction: column-reverse;
+      gap: 16px;
+      max-width: 100%;
+    }
+
+    &__footer-left {
+      width: 100%;
+
+      app-button {
+        width: 100%;
+      }
+    }
+
+    &__footer-right {
+      flex-direction: column-reverse;
+      width: 100%;
+
+      app-button {
+        width: 100%;
+      }
+    }
+  }
+}

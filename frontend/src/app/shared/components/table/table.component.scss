@@ -1,0 +1,239 @@
+@use 'sass:color';
+@use '../../../shared/styles/variables' as v;
+
+.table-wrapper {
+  overflow-x: auto;
+  border: 1px solid v.$border;
+  border-radius: v.$radius-lg;
+}
+
+.table {
+  width: 100%;
+  min-width: 600px;
+  border-collapse: collapse;
+  font-family: v.$font-family;
+
+  &__head {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+
+  &__th {
+    background: v.$background-secondary;
+    color: v.$text-secondary;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 12px 16px;
+    text-align: left;
+    white-space: nowrap;
+    border-bottom: 1px solid v.$border;
+
+    &--checkbox {
+      width: 48px;
+      padding: 12px;
+    }
+  }
+
+  &__body {
+    .table__row:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__row {
+    border-bottom: 1px solid v.$border;
+    transition: background 150ms ease;
+    cursor: pointer;
+
+    &:not(.table__row--loading):hover {
+      background: v.$accent;
+    }
+
+    &--selected {
+      background: v.$primary-light;
+
+      &:hover {
+        background: color.adjust(v.$primary-light, $lightness: -4%);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid v.$border-focus;
+      outline-offset: -2px;
+    }
+  }
+
+  &__td {
+    color: v.$text-primary;
+    font-size: 14px;
+    padding: 12px 16px;
+    vertical-align: middle;
+
+    &--checkbox {
+      width: 48px;
+      padding: 12px;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 48px 16px;
+    color: v.$text-muted;
+
+    lucide-angular {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+
+  &__empty-message {
+    margin: 12px 0 0;
+    font-size: 14px;
+    color: v.$text-muted;
+  }
+
+  &__checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1px solid v.$border;
+    border-radius: 4px;
+    background: v.$background;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+    transition: all 150ms ease;
+    color: v.$primary-foreground;
+
+    &:hover {
+      border-color: v.$primary;
+    }
+
+    &:focus-visible {
+      outline: 2px solid v.$border-focus;
+      outline-offset: 2px;
+    }
+
+    &--checked,
+    &--indeterminate {
+      background: v.$primary;
+      border-color: v.$primary;
+    }
+  }
+
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-top: 1px solid v.$border;
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$text-secondary;
+  }
+
+  &__pagination-size {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    select {
+      border: 1px solid v.$border;
+      border-radius: v.$radius-sm;
+      padding: 4px 8px;
+      font-family: v.$font-family;
+      font-size: 13px;
+      background: v.$background;
+
+      &:focus {
+        outline: none;
+        border-color: v.$border-focus;
+      }
+    }
+  }
+
+  &__pagination-info {
+    color: v.$text-muted;
+    font-size: 13px;
+  }
+
+  &__pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    button {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: 1px solid v.$border;
+      border-radius: v.$radius-sm;
+      cursor: pointer;
+      color: v.$text-secondary;
+      transition: v.$transition-fast;
+
+      &:hover:not(:disabled) {
+        background: v.$accent;
+        border-color: v.$border;
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      &:focus-visible {
+        outline: 2px solid v.$border-focus;
+      }
+    }
+  }
+
+  &__pagination-pages {
+    font-size: 13px;
+    color: v.$text-secondary;
+    padding: 0 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .table__pagination {
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .table__pagination-size {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.skeleton {
+  height: 14px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, v.$muted 25%, v.$background 50%, v.$muted 75%);
+  background-size: 400px 100%;
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+
+  &--checkbox {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+  }
+}
+
+@keyframes skeleton-pulse {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}

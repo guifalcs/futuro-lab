@@ -1,0 +1,280 @@
+@use '../../../shared/styles/variables' as v;
+
+.team-list {
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  &__header-left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-family: v.$font-family;
+    font-size: 24px;
+    font-weight: 600;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin: 4px 0 0;
+  }
+
+  &__filters-card {
+    display: block;
+    margin-bottom: 16px;
+  }
+
+  &__filters {
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  &__filter {
+    &--search {
+      width: 300px;
+      flex-shrink: 0;
+    }
+
+    &--department {
+      width: 220px;
+    }
+
+    &--status {
+      width: 160px;
+    }
+
+    &--presence {
+      width: 160px;
+    }
+  }
+
+  // Table
+  &__table-card {
+    display: block;
+  }
+
+  &__table-wrapper {
+    overflow-x: auto;
+  }
+
+  &__collaborator-info {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+  }
+
+  &__collaborator-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__collaborator-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: v.$text-primary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__collaborator-email {
+    font-size: 12px;
+    color: v.$text-muted;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  &__action-icon {
+    color: v.$text-muted;
+
+    &--danger {
+      color: v.$error;
+    }
+
+    &--success {
+      color: v.$success;
+    }
+  }
+
+  // Mobile cards (hidden on desktop)
+  &__mobile-cards {
+    display: none;
+  }
+
+  &__mobile-card {
+    padding: 16px;
+    border-bottom: 1px solid v.$border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__mobile-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &__mobile-card-identity {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__mobile-card-identity-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__mobile-card-status {
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+
+  &__mobile-card-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  &__mobile-card-actions {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-end;
+    margin-top: 12px;
+  }
+
+  // Empty state
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+  }
+
+  &__empty-icon {
+    color: v.$text-muted;
+  }
+
+  &__empty-title {
+    font-family: v.$font-family;
+    font-size: 16px;
+    font-weight: 500;
+    color: v.$text-primary;
+    margin: 16px 0 0;
+  }
+
+  &__empty-subtitle {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin: 4px 0 0;
+  }
+
+  // Result count
+  &__count {
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$text-muted;
+    margin: 12px 0 0;
+  }
+
+  // Modal
+  &__modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__modal-icon {
+    &--warning {
+      color: v.$warning;
+    }
+
+    &--success {
+      color: v.$success;
+    }
+  }
+
+  &__modal-text {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-secondary;
+    margin: 16px 0 0;
+    line-height: 1.5;
+  }
+
+  &__modal-footer {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+}
+
+// Responsive - Mobile
+@media (max-width: 767px) {
+  .team-list {
+    &__header {
+      flex-direction: column;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    &__header-right {
+      app-button {
+        display: block;
+        width: 100%;
+      }
+    }
+
+    &__filters {
+      flex-direction: column;
+    }
+
+    &__filter {
+      &--search,
+      &--department,
+      &--status,
+      &--presence {
+        width: 100%;
+      }
+    }
+
+    &__table-wrapper {
+      display: none;
+    }
+
+    &__mobile-cards {
+      display: block;
+    }
+  }
+}

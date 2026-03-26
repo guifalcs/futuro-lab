@@ -1,0 +1,111 @@
+@use '../../../shared/styles/variables' as v;
+
+.team-create {
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$text-muted;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: v.$transition-fast;
+
+    &:hover {
+      color: v.$primary;
+    }
+  }
+
+  &__header {
+    margin-bottom: 32px;
+  }
+
+  &__title {
+    font-family: v.$font-family;
+    font-size: 24px;
+    font-weight: 600;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin: 4px 0 0;
+    max-width: 600px;
+    line-height: 1.5;
+  }
+
+  &__card {
+    display: block;
+    max-width: 640px;
+  }
+
+  &__card-title {
+    font-family: v.$font-family;
+    font-size: 16px;
+    font-weight: 500;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__help {
+    font-family: v.$font-family;
+    font-size: 12px;
+    color: v.$text-muted;
+    margin: 4px 0 0;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+  }
+
+  &__modal-text {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-secondary;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  &__modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+}
+
+// Responsive - Mobile
+@media (max-width: 767px) {
+  .team-create {
+    &__card {
+      max-width: 100%;
+    }
+
+    &__footer {
+      flex-direction: column-reverse;
+
+      app-button {
+        width: 100%;
+      }
+    }
+  }
+}

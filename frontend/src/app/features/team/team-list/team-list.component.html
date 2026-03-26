@@ -1,0 +1,242 @@
+<div class="team-list">
+  <!-- Header -->
+  <div class="team-list__header">
+    <div class="team-list__header-left">
+      <h1 class="team-list__title">Equipe</h1>
+      <p class="team-list__subtitle">Gerencie os colaboradores da plataforma</p>
+    </div>
+    <div class="team-list__header-right">
+      <app-button variant="default" (clicked)="navigateToNew()">
+        <lucide-angular name="user-plus" [size]="16" [strokeWidth]="1.75" />
+        Novo colaborador
+      </app-button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <app-card padding="sm" class="team-list__filters-card">
+    <div class="team-list__filters">
+      <div class="team-list__filter team-list__filter--search">
+        <app-input
+          type="text"
+          placeholder="Buscar por nome ou e-mail..."
+          [(value)]="searchQuery"
+        />
+      </div>
+      <div class="team-list__filter team-list__filter--department">
+        <app-multi-select
+          placeholder="Todos os departamentos"
+          [options]="departments"
+          [(value)]="departmentFilter"
+        />
+      </div>
+      <div class="team-list__filter team-list__filter--status">
+        <app-multi-select
+          placeholder="Todos os status"
+          [options]="statusOptions"
+          [(value)]="statusFilter"
+        />
+      </div>
+      <div class="team-list__filter team-list__filter--presence">
+        <app-multi-select
+          placeholder="Todas as presenças"
+          [options]="presenceOptions"
+          [(value)]="presenceFilter"
+        />
+      </div>
+    </div>
+  </app-card>
+
+  <!-- Table -->
+  <app-card padding="none" class="team-list__table-card">
+    @if (filteredCollaborators().length > 0) {
+      <!-- Desktop/Tablet table -->
+      <div class="team-list__table-wrapper">
+        <app-table
+          [columns]="tableColumns"
+          [data]="filteredCollaboratorsAsRecords()"
+          [paginated]="true"
+          [pageSize]="10"
+          [emptyMessage]="'Nenhum colaborador encontrado'"
+          (rowClick)="onView($any($event.row).id)"
+        >
+          <ng-template appTableCell="collaborator" let-row>
+            <div class="team-list__collaborator-info">
+              <app-avatar size="sm" [name]="row['name']" [status]="row['presence']" />
+              <div class="team-list__collaborator-text">
+                <span class="team-list__collaborator-name">{{ row['name'] }}</span>
+                <span class="team-list__collaborator-email">{{ row['email'] }}</span>
+              </div>
+            </div>
+          </ng-template>
+
+          <ng-template appTableCell="department" let-row>
+            <app-badge variant="info" [text]="row['department']" />
+          </ng-template>
+
+          <ng-template appTableCell="profile" let-row>
+            @if (row['profile'] === 'manager') {
+              <app-badge variant="warning" text="Gestor" />
+            } @else {
+              <app-badge variant="neutral" text="Colaborador" />
+            }
+          </ng-template>
+
+          <ng-template appTableCell="status" let-row>
+            @if (row['status'] === 'active') {
+              <app-badge variant="success" text="Ativo" />
+            } @else {
+              <app-badge variant="danger" text="Inativo" />
+            }
+          </ng-template>
+
+          <ng-template appTableCell="actions" let-row>
+            <div class="team-list__actions">
+              <app-button variant="ghost" size="icon" appTooltip="Visualizar" (clicked)="onView(row['id'])">
+                <lucide-angular name="eye" [size]="16" [strokeWidth]="1.75" class="team-list__action-icon" />
+              </app-button>
+              <app-button variant="ghost" size="icon" appTooltip="Editar" (clicked)="onEdit(row['id'])">
+                <lucide-angular name="pencil" [size]="16" [strokeWidth]="1.75" class="team-list__action-icon" />
+              </app-button>
+              @if (row['status'] === 'active') {
+                <app-button variant="ghost" size="icon" appTooltip="Desativar" (clicked)="openStatusModalFromRow(row)">
+                  <lucide-angular name="user-x" [size]="16" [strokeWidth]="1.75" class="team-list__action-icon team-list__action-icon--danger" />
+                </app-button>
+              } @else {
+                <app-button variant="ghost" size="icon" appTooltip="Reativar" (clicked)="openStatusModalFromRow(row)">
+                  <lucide-angular name="user-check" [size]="16" [strokeWidth]="1.75" class="team-list__action-icon team-list__action-icon--success" />
+                </app-button>
+              }
+            </div>
+          </ng-template>
+        </app-table>
+      </div>
+
+      <!-- Mobile cards -->
+      <div class="team-list__mobile-cards">
+        @for (collaborator of filteredCollaborators(); track collaborator.id) {
+          <div class="team-list__mobile-card">
+            <div class="team-list__mobile-card-top">
+              <div class="team-list__mobile-card-identity">
+                <app-avatar
+                  size="sm"
+                  [name]="collaborator.name"
+                  [status]="collaborator.presence"
+                />
+                <div class="team-list__mobile-card-identity-text">
+                  <span class="team-list__collaborator-name">{{ collaborator.name }}</span>
+                  <span class="team-list__collaborator-email">{{ collaborator.email }}</span>
+                </div>
+              </div>
+              <div class="team-list__mobile-card-status">
+                @if (collaborator.status === 'active') {
+                  <app-badge variant="success" text="Ativo" />
+                } @else {
+                  <app-badge variant="danger" text="Inativo" />
+                }
+              </div>
+            </div>
+            <div class="team-list__mobile-card-badges">
+              <app-badge variant="neutral" [text]="collaborator.role" />
+              <app-badge variant="info" [text]="collaborator.department" />
+              @if (collaborator.profile === 'manager') {
+                <app-badge variant="warning" text="Gestor" />
+              } @else {
+                <app-badge variant="neutral" text="Colaborador" />
+              }
+            </div>
+            <div class="team-list__mobile-card-actions">
+              <app-button
+                variant="ghost"
+                size="icon"
+                appTooltip="Visualizar"
+                (clicked)="onView(collaborator.id)"
+              >
+                <lucide-angular name="eye" [size]="16" [strokeWidth]="1.75" class="team-list__action-icon" />
+              </app-button>
+              <app-button
+                variant="ghost"
+                size="icon"
+                appTooltip="Editar"
+                (clicked)="onEdit(collaborator.id)"
+              >
+                <lucide-angular name="pencil" [size]="16" [strokeWidth]="1.75" class="team-list__action-icon" />
+              </app-button>
+              @if (collaborator.status === 'active') {
+                <app-button
+                  variant="ghost"
+                  size="icon"
+                  appTooltip="Desativar"
+                  (clicked)="openStatusModal(collaborator)"
+                >
+                  <lucide-angular name="user-x" [size]="16" [strokeWidth]="1.75" class="team-list__action-icon team-list__action-icon--danger" />
+                </app-button>
+              } @else {
+                <app-button
+                  variant="ghost"
+                  size="icon"
+                  appTooltip="Reativar"
+                  (clicked)="openStatusModal(collaborator)"
+                >
+                  <lucide-angular name="user-check" [size]="16" [strokeWidth]="1.75" class="team-list__action-icon team-list__action-icon--success" />
+                </app-button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <!-- Empty state -->
+      <div class="team-list__empty">
+        <lucide-angular name="users" [size]="48" [strokeWidth]="1.5" class="team-list__empty-icon" />
+        <p class="team-list__empty-title">Nenhum colaborador encontrado</p>
+        <p class="team-list__empty-subtitle">Tente ajustar os filtros de busca</p>
+      </div>
+    }
+  </app-card>
+
+  <!-- Result count -->
+  <p class="team-list__count">
+    Exibindo {{ filteredCount() }} de {{ totalCount() }} colaboradores
+  </p>
+</div>
+
+<!-- Status change modal -->
+@if (selectedCollaborator()) {
+  <app-modal
+    [isOpen]="statusModalOpen()"
+    [title]="isDeactivating() ? 'Desativar colaborador' : 'Reativar colaborador'"
+    size="sm"
+    (closed)="closeStatusModal()"
+  >
+    <div class="team-list__modal-body">
+      @if (isDeactivating()) {
+        <lucide-angular name="alert-triangle" [size]="32" [strokeWidth]="1.75" class="team-list__modal-icon team-list__modal-icon--warning" />
+        <p class="team-list__modal-text">
+          Tem certeza que deseja desativar <strong>{{ selectedCollaborator()!.name }}</strong>?
+          Ele não poderá mais acessar a plataforma.
+        </p>
+      } @else {
+        <lucide-angular name="user-check" [size]="32" [strokeWidth]="1.75" class="team-list__modal-icon team-list__modal-icon--success" />
+        <p class="team-list__modal-text">
+          Deseja reativar o acesso de <strong>{{ selectedCollaborator()!.name }}</strong> à plataforma?
+        </p>
+      }
+    </div>
+
+    <div appModalFooter>
+      <div class="team-list__modal-footer">
+        <app-button variant="outline" (clicked)="closeStatusModal()">Cancelar</app-button>
+        @if (isDeactivating()) {
+          <app-button variant="destructive" [loading]="statusModalLoading()" (clicked)="confirmStatusChange()">
+            Desativar
+          </app-button>
+        } @else {
+          <app-button variant="default" [loading]="statusModalLoading()" (clicked)="confirmStatusChange()">
+            Reativar
+          </app-button>
+        }
+      </div>
+    </div>
+  </app-modal>
+}

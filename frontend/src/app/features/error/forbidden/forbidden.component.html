@@ -1,0 +1,25 @@
+<div class="forbidden-container">
+  <div class="forbidden-content">
+    <img src="assets/images/illustrations/403.svg" alt="Acesso negado" class="forbidden-illustration">
+    <h1 class="forbidden-title">Área Restrita</h1>
+    <p class="forbidden-subtitle">
+      Você não tem as permissões necessárias para acessar este recurso. Se acredita que deveria ter acesso, entre em contato com seu gestor.
+    </p>
+
+    <div class="forbidden-actions">
+      <app-button variant="default" size="md" class="forbidden-btn" (onClick)="goHome()">
+        Voltar para o início
+      </app-button>
+
+      <a 
+        class="forbidden-link" 
+        (click)="goBack()" 
+        (keydown.enter)="goBack()" 
+        (keydown.space)="goBack()" 
+        tabindex="0" 
+        role="button">
+        Ou retornar à página anterior
+      </a>
+    </div>
+  </div>
+</div>

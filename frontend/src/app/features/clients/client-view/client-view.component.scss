@@ -1,0 +1,259 @@
+@use '../../../shared/styles/variables' as v;
+
+.client-view {
+  &__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$text-muted;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin-bottom: 16px;
+    transition: v.$transition-fast;
+
+    &:hover {
+      color: v.$primary;
+    }
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  &__header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  &__avatar--lg {
+    display: none;
+  }
+
+  &__header-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__title {
+    font-family: v.$font-family;
+    font-size: 24px;
+    font-weight: 600;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  &__subtitle {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin: 4px 0 0;
+  }
+
+  &__header-badges {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  &__card {
+    display: block;
+    max-width: 720px;
+    margin-top: 24px;
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+
+  &__card-title {
+    font-family: v.$font-family;
+    font-size: 16px;
+    font-weight: 500;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  &__fields {
+    display: flex;
+    flex-direction: column;
+
+    &--grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 32px;
+    }
+
+    &--contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0 32px;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid v.$border;
+    }
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 16px;
+  }
+
+  &__field-label {
+    font-family: v.$font-family;
+    font-size: 12px;
+    font-weight: 500;
+    color: v.$text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__field-value {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-primary;
+
+    &--mono {
+      font-family: v.$font-mono;
+    }
+  }
+
+  &__address {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__responsible {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-bottom: 16px;
+  }
+
+  &__responsible-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__notes {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 16px;
+    border-top: 1px solid v.$border;
+  }
+
+  &__notes-text {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-secondary;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  &__activity-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+    text-align: center;
+  }
+
+  &__activity-icon {
+    color: v.$text-muted;
+  }
+
+  &__activity-text {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin: 12px 0 0;
+  }
+
+  &__not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    text-align: center;
+  }
+
+  &__not-found-icon {
+    color: v.$text-muted;
+  }
+
+  &__not-found-title {
+    font-family: v.$font-family;
+    font-size: 20px;
+    font-weight: 600;
+    color: v.$text-primary;
+    margin: 16px 0 0;
+  }
+
+  &__not-found-text {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-muted;
+    margin: 4px 0 0;
+  }
+
+  &__not-found app-button {
+    margin-top: 24px;
+  }
+}
+
+// Responsive - Tablet
+@media (max-width: 1024px) {
+  .client-view {
+    &__avatar--xl {
+      display: none;
+    }
+
+    &__avatar--lg {
+      display: block;
+    }
+
+    &__fields--contact {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
+
+// Responsive - Mobile
+@media (max-width: 767px) {
+  .client-view {
+    &__header {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 16px;
+    }
+
+    &__header-left {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    &__header-badges {
+      justify-content: center;
+    }
+
+    &__fields--grid,
+    &__fields--contact {
+      grid-template-columns: 1fr;
+    }
+  }
+}

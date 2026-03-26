@@ -1,0 +1,173 @@
+@use '../../../shared/styles/variables' as v;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: v.$font-family;
+  font-size: 14px;
+  line-height: 1;
+  border-radius: v.$radius-md;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: v.$transition-fast;
+  text-decoration: none;
+  white-space: nowrap;
+  user-select: none;
+  position: relative;
+
+  // Sizes
+  &--sm {
+    height: 32px;
+    padding: 0 12px;
+    font-size: 13px;
+  }
+
+  &--md {
+    height: 36px;
+    padding: 0 16px;
+  }
+
+  &--lg {
+    height: 40px;
+    padding: 0 20px;
+    font-size: 15px;
+  }
+
+  &--icon {
+    height: 36px;
+    width: 36px;
+    padding: 0;
+  }
+
+  &:focus-visible {
+    outline: 2px solid v.$border-focus;
+    outline-offset: 2px;
+  }
+
+  // Variants
+  &--default {
+    background-color: v.$primary;
+    color: v.$primary-foreground;
+    font-weight: 600;
+
+    &:hover:not(.btn--disabled) {
+      background-color: v.$primary-hover;
+    }
+
+    &:active:not(.btn--disabled) {
+      background-color: v.$primary-active;
+    }
+  }
+
+  &--secondary {
+    background-color: v.$muted;
+    color: v.$primary;
+    font-weight: 500;
+
+    &:hover:not(.btn--disabled) {
+      background-color: v.$muted-hover;
+    }
+
+    &:active:not(.btn--disabled) {
+      background-color: v.$muted-active;
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    border-color: v.$border;
+    color: v.$primary;
+    font-weight: 500;
+
+    &:hover:not(.btn--disabled) {
+      border-color: v.$border-hover;
+      background-color: v.$accent;
+    }
+
+    &:active:not(.btn--disabled) {
+      background-color: v.$accent-hover;
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    border-color: transparent;
+    color: v.$muted-foreground;
+    font-weight: 500;
+
+    &:hover:not(.btn--disabled) {
+      background-color: v.$accent;
+      color: v.$accent-foreground;
+    }
+
+    &:active:not(.btn--disabled) {
+      background-color: v.$accent-hover;
+    }
+  }
+
+  &--destructive {
+    background-color: v.$error;
+    color: v.$primary-foreground;
+    font-weight: 600;
+
+    &:hover:not(.btn--disabled) {
+      background-color: v.$error-hover;
+    }
+
+    &:active:not(.btn--disabled) {
+      background-color: v.$error-active;
+    }
+  }
+
+  // Disabled state
+  &--disabled,
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  // Spinner
+  &__spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: btn-spin 0.6s linear infinite;
+    flex-shrink: 0;
+  }
+
+  &--sm &__spinner {
+    width: 12px;
+    height: 12px;
+  }
+
+  &--lg &__spinner {
+    width: 16px;
+    height: 16px;
+  }
+
+  &__content--hidden {
+    visibility: hidden;
+    width: 0;
+    overflow: hidden;
+  }
+
+  // Loading state: show spinner + hide content but keep layout
+  &--loading {
+    pointer-events: none;
+
+    .btn__spinner {
+      position: absolute;
+    }
+  }
+}
+
+@keyframes btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

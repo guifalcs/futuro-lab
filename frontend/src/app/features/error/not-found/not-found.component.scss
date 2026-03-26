@@ -1,0 +1,76 @@
+@use '../../../shared/styles/variables' as var;
+
+.not-found-container {
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var.$background-secondary;
+  padding: 0 24px;
+}
+
+.not-found-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 500px;
+}
+
+.not-found-illustration {
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin-bottom: 32px;
+
+  @media (max-width: 768px) {
+    max-width: 240px;
+  }
+}
+
+.not-found-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var.$text-primary;
+  margin-top: 0;
+  margin-bottom: 0;
+
+  @media (max-width: 768px) {
+    font-size: 22px;
+  }
+}
+
+.not-found-subtitle {
+  font-size: 16px;
+  color: var.$text-secondary;
+  margin-top: 12px;
+  margin-bottom: 0;
+  line-height: 1.6;
+}
+
+.not-found-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.not-found-btn {
+  display: block;
+}
+
+.not-found-link {
+  font-size: 14px;
+  color: var.$text-muted;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 150ms ease;
+
+  &:hover {
+    color: var.$primary;
+    text-decoration: underline;
+  }
+}

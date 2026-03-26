@@ -1,0 +1,69 @@
+@use '../../../shared/styles/variables' as v;
+
+.card {
+  background: v.$surface;
+  border: 1px solid v.$border;
+  border-radius: v.$radius-lg;
+  box-shadow: v.$shadow-sm;
+  display: flex;
+  flex-direction: column;
+  font-family: v.$font-family;
+  transition: v.$transition-fast;
+
+  // Padding variants
+  &--padding-none {
+    padding: 0;
+  }
+
+  &--padding-sm {
+    padding: 16px;
+  }
+
+  &--padding-md {
+    padding: 24px;
+  }
+
+  &--padding-lg {
+    padding: 32px;
+  }
+
+  // Variant: interactive
+  &--interactive {
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: v.$shadow-md;
+      transform: translateY(-1px);
+    }
+
+    &:focus-visible {
+      outline: 2px solid v.$border-focus;
+      outline-offset: 2px;
+    }
+  }
+
+  // Variant: selected
+  &--selected {
+    border-color: v.$primary;
+    background: v.$primary-light;
+  }
+
+  &__header {
+    padding-bottom: 16px;
+    border-bottom: 1px solid v.$border;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__body {
+    flex: 1;
+  }
+
+  &__footer {
+    padding-top: 16px;
+    border-top: 1px solid v.$border;
+    margin-top: 16px;
+  }
+}

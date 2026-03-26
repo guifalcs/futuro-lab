@@ -1,0 +1,25 @@
+<div class="not-found-container">
+  <div class="not-found-content">
+    <img src="assets/images/illustrations/404.svg" alt="Página não encontrada" class="not-found-illustration">
+    <h1 class="not-found-title">Ops! Página não encontrada</h1>
+    <p class="not-found-subtitle">
+      Parece que o caminho que você tentou seguir não existe mais ou nunca esteve aqui.
+    </p>
+
+    <div class="not-found-actions">
+      <app-button variant="default" size="md" class="not-found-btn" (onClick)="goHome()">
+        Voltar para o início
+      </app-button>
+
+      <a 
+        class="not-found-link" 
+        (click)="goBack()" 
+        (keydown.enter)="goBack()" 
+        (keydown.space)="goBack()" 
+        tabindex="0" 
+        role="button">
+        Ou voltar à página anterior
+      </a>
+    </div>
+  </div>
+</div>

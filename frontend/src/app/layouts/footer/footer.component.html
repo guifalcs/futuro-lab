@@ -1,0 +1,15 @@
+<footer class="footer">
+  <span class="footer__copyright">{{ copyrightText() }}</span>
+  <span class="footer__credits">
+    Desenvolvido por
+    <a
+      class="footer__link"
+      href="https://rebuild.dev.br"
+      target="_blank"
+      rel="noopener noreferrer"
+    ><img class="footer__logo" [src]="logoSrc()" alt="Rebuild" /></a>
+    @if (versionText()) {
+      <span class="footer__version">{{ versionText() }}</span>
+    }
+  </span>
+</footer>

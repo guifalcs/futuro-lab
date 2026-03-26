@@ -1,0 +1,71 @@
+@use '../../../shared/styles/variables' as v;
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.input {
+  &__label {
+    display: block;
+    font-family: v.$font-family;
+    font-size: 14px;
+    font-weight: 500;
+    color: v.$text-secondary;
+    margin-bottom: 6px;
+  }
+
+  &__required {
+    color: v.$error;
+    margin-left: 2px;
+  }
+
+  &__field {
+    width: 100%;
+    height: 36px;
+    padding: 8px 12px;
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-primary;
+    background-color: v.$background;
+    border: 1px solid v.$border;
+    border-radius: v.$radius-md;
+    outline: none;
+    transition: v.$transition-fast;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: v.$text-muted;
+    }
+
+    &:focus {
+      border-color: v.$border-focus;
+      box-shadow: 0 0 0 3px v.$ring;
+    }
+
+    &--error {
+      border-color: v.$error;
+
+      &:focus {
+        border-color: v.$error;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+      }
+    }
+
+    &--disabled,
+    &:disabled {
+      background-color: v.$muted;
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__error {
+    display: block;
+    font-family: v.$font-family;
+    font-size: 12px;
+    color: v.$error;
+    margin-top: 4px;
+  }
+}

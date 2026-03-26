@@ -1,0 +1,49 @@
+@use '../../../shared/styles/variables' as v;
+
+.avatar-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: v.$radius-full;
+  position: relative;
+  font-family: v.$font-family;
+  font-weight: 600;
+  color: white;
+  transition: v.$transition-fast;
+}
+
+.avatar-sm { width: 32px; height: 32px; font-size: 12px; }
+.avatar-md { width: 40px; height: 40px; font-size: 14px; }
+.avatar-lg { width: 48px; height: 48px; font-size: 16px; }
+.avatar-xl { width: 64px; height: 64px; font-size: 20px; }
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: v.$radius-full;
+}
+
+.avatar-fallback {
+  color: v.$text-muted;
+  width: 60%;
+  height: 60%;
+}
+
+.avatar-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+}
+
+.avatar-lg > .avatar-status { width: 12px; height: 12px; }
+.avatar-xl > .avatar-status { width: 14px; height: 14px; }
+
+.status-online { background-color: v.$success; }
+.status-offline { background-color: v.$text-muted; }
+.status-busy { background-color: v.$error; }
+.status-away { background-color: v.$warning; }

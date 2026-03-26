@@ -1,0 +1,24 @@
+<div
+  [ngClass]="classes()"
+  (click)="onClick()"
+  (keydown.enter)="onClick()"
+  (keydown.space)="onClick(); $event.preventDefault()"
+  [attr.tabindex]="variant() === 'interactive' ? 0 : null"
+  [attr.role]="variant() === 'interactive' ? 'button' : null"
+>
+  @if (hasHeader()) {
+    <div class="card__header">
+      <ng-content select="[appCardHeader]" />
+    </div>
+  }
+
+  <div class="card__body">
+    <ng-content />
+  </div>
+
+  @if (hasFooter()) {
+    <div class="card__footer">
+      <ng-content select="[appCardFooter]" />
+    </div>
+  }
+</div>

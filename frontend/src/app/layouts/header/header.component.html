@@ -1,0 +1,106 @@
+<header class="header">
+  <div class="header__left">
+    <button class="header__logo-btn" type="button" (click)="logoClick.emit()">
+      @if (logoSrc()) {
+        <img [src]="logoSrc()" alt="Status Contabilidade" class="header__logo" />
+      }
+    </button>
+
+    <button
+      class="header__hamburger"
+      type="button"
+      (click)="toggleMobileMenu($event)"
+      aria-label="Menu de navegação"
+    >
+      @if (mobileMenuOpen()) {
+        <lucide-angular name="x" [size]="20" [strokeWidth]="1.75" />
+      } @else {
+        <lucide-angular name="menu" [size]="20" [strokeWidth]="1.75" />
+      }
+    </button>
+  </div>
+
+  <nav class="header__nav" aria-label="Menu principal">
+    @for (item of navItems(); track item.route) {
+      <button
+        class="header__nav-item"
+        type="button"
+        [ngClass]="{ 'header__nav-item--active': item.route === activeRoute() }"
+        (click)="onNavClick(item.route)"
+      >
+        {{ item.label }}
+      </button>
+    }
+  </nav>
+
+  <div class="header__right">
+    <button class="header__user-btn" type="button" (click)="toggleUserMenu($event)" (keydown)="onUserMenuKeydown($event)">
+      <app-avatar [name]="userName()" [src]="userAvatar()" size="sm" />
+      <span class="header__user-name">{{ userName() }}</span>
+      <lucide-angular
+        name="chevron-down"
+        [size]="16"
+        [strokeWidth]="1.75"
+        class="header__chevron"
+        [ngClass]="{ 'header__chevron--open': userMenuOpen() }"
+      />
+    </button>
+
+    @if (userMenuOpen()) {
+      <div
+        class="header__dropdown"
+        role="menu"
+        aria-label="Menu do usuário"
+        tabindex="-1"
+        (keydown)="onDropdownKeydown($event)"
+      >
+        <button
+          class="header__dropdown-item"
+          type="button"
+          role="menuitem"
+          (click)="onProfileClick()"
+        >
+          <lucide-angular name="user" [size]="16" [strokeWidth]="1.75" />
+          <span>Meu Perfil</span>
+        </button>
+        <button
+          class="header__dropdown-item"
+          type="button"
+          role="menuitem"
+          (click)="onSupportClick()"
+        >
+          <lucide-angular name="life-buoy" [size]="16" [strokeWidth]="1.75" />
+          <span>Suporte</span>
+        </button>
+        <hr class="header__dropdown-divider" />
+        <button
+          class="header__dropdown-item header__dropdown-item--danger"
+          type="button"
+          role="menuitem"
+          (click)="onLogoutClick()"
+        >
+          <lucide-angular name="log-out" [size]="16" [strokeWidth]="1.75" />
+          <span>Sair</span>
+        </button>
+      </div>
+    }
+  </div>
+</header>
+
+@if (mobileMenuOpen()) {
+  <nav
+    class="header__mobile-menu"
+    aria-label="Menu de navegação mobile"
+  >
+    @for (item of navItems(); track item.route) {
+      <button
+        class="header__mobile-item"
+        type="button"
+        [ngClass]="{ 'header__mobile-item--active': item.route === activeRoute() }"
+        (click)="onNavClick(item.route)"
+      >
+        {{ item.label }}
+      </button>
+    }
+  </nav>
+}
