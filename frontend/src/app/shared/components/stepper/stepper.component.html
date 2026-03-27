@@ -1,0 +1,34 @@
+<div class="stepper">
+  @for (step of steps(); track step.label; let i = $index; let last = $last) {
+    <div
+      class="stepper__step"
+      [ngClass]="{
+        'stepper__step--completed': isCompleted(i),
+        'stepper__step--current': isCurrent(i),
+        'stepper__step--disabled': step.disabled,
+        'stepper__step--clickable': isClickable(i)
+      }"
+      (click)="onStepClick(i)"
+      (keydown.enter)="onStepClick(i)"
+      [attr.tabindex]="isClickable(i) ? 0 : null"
+      [attr.role]="isClickable(i) ? 'button' : null"
+      [attr.aria-current]="isCurrent(i) ? 'step' : null"
+    >
+      <span class="stepper__circle">
+        @if (isCompleted(i)) {
+          <lucide-angular name="check" [size]="14" [strokeWidth]="2.5" />
+        } @else {
+          {{ i + 1 }}
+        }
+      </span>
+      <span class="stepper__label">{{ step.label }}</span>
+    </div>
+
+    @if (!last) {
+      <div
+        class="stepper__connector"
+        [ngClass]="{ 'stepper__connector--completed': isCompleted(i + 1) }"
+      ></div>
+    }
+  }
+</div>

@@ -1,0 +1,193 @@
+<div class="propostas">
+  <!-- Header -->
+  <div class="propostas__header">
+    <h1 class="propostas__title">Propostas</h1>
+    <app-button variant="default" size="md" (clicked)="router.navigate(['/comercial/propostas/nova'])">
+      <lucide-angular name="plus" [size]="16" [strokeWidth]="2" />
+      Nova Proposta
+    </app-button>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="propostas__toolbar">
+    <app-button variant="outline" size="sm" [disabled]="!hasSelection()" (clicked)="editarSelecionada()">
+      <lucide-angular name="pencil" [size]="14" [strokeWidth]="2" />
+      Editar Proposta
+    </app-button>
+    <app-button variant="outline" size="sm" [disabled]="!hasSelection()" (clicked)="visualizarSelecionada()">
+      <lucide-angular name="eye" [size]="14" [strokeWidth]="2" />
+      Visualizar
+    </app-button>
+    <app-button variant="outline" size="sm" [disabled]="!hasSelection()" (clicked)="abrirRevisaoModal()">
+      <lucide-angular name="refresh-cw" [size]="14" [strokeWidth]="2" />
+      Criar Revisão
+    </app-button>
+    <app-button variant="outline" size="sm" [disabled]="!hasSelection()" (clicked)="abrirCopiarModal()">
+      <lucide-angular name="copy" [size]="14" [strokeWidth]="2" />
+      Copiar Proposta
+    </app-button>
+    <app-button variant="outline" size="sm" [disabled]="!podeAlterarStatusSelecionada()" (clicked)="abrirStatusModal()">
+      <lucide-angular name="arrow-right-left" [size]="14" [strokeWidth]="2" />
+      Alterar Status
+    </app-button>
+
+    <!-- Export dropdown -->
+    <div class="propostas__export-wrapper">
+      <app-button
+        variant="outline"
+        size="sm"
+        (clicked)="toggleExportDropdown()"
+      >
+        <lucide-angular name="file-down" [size]="14" [strokeWidth]="2" />
+        Exportar
+        <lucide-angular name="chevron-down" [size]="12" [strokeWidth]="2" />
+      </app-button>
+
+      @if (exportDropdownOpen()) {
+        <div class="propostas__export-dropdown" (mouseleave)="closeExportDropdown()">
+          <button class="propostas__export-item" (click)="onExport('excel')">Excel</button>
+          <button class="propostas__export-item" (click)="onExport('pdf')">PDF</button>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <app-table
+    [columns]="columns"
+    [data]="tableData()"
+    [selectable]="true"
+    [selectedRows]="selectedRows()"
+    [paginated]="true"
+    [pageSize]="10"
+    [pageSizeOptions]="[10, 25, 50]"
+    (selectionChange)="onSelectionChange($event)"
+    (rowDoubleClick)="onRowDoubleClick($event)"
+  >
+    <ng-template appTableCell="status" let-row>
+      <app-badge [variant]="getStatusVariant(row.status)" [text]="row.status" size="sm" />
+    </ng-template>
+
+    <ng-template appTableCell="totalReais" let-row>
+      {{ row.totalReais | currency: 'BRL' : 'symbol' : '1.2-2' }}
+    </ng-template>
+
+    <ng-template appTableCell="dataCriacao" let-row>
+      {{ row.dataCriacao | date: 'dd/MM/yyyy' }}
+    </ng-template>
+
+    <ng-template appTableCell="dataValidade" let-row>
+      {{ row.dataValidade | date: 'dd/MM/yyyy' }}
+    </ng-template>
+  </app-table>
+
+  <!-- ── Modal: Criar Revisão ─────────────────────────────── -->
+  @if (revisaoProposta(); as rp) {
+    <app-modal
+      [isOpen]="revisaoModalOpen()"
+      title="Criar revisão"
+      size="sm"
+      (closed)="fecharRevisaoModal()"
+    >
+      <div class="propostas__modal-body">
+        <p class="propostas__modal-text">
+          Será criada a versão {{ rp.versao + 1 }} da proposta {{ rp.numeroProposta }}.
+          A versão atual será mantida no histórico como readonly.
+        </p>
+        <div class="propostas__modal-summary">
+          <div class="propostas__modal-summary-row">
+            <span class="propostas__modal-summary-label">Proposta</span>
+            <span class="propostas__modal-summary-value">{{ rp.numeroProposta }}</span>
+          </div>
+          <div class="propostas__modal-summary-row">
+            <span class="propostas__modal-summary-label">Versão atual</span>
+            <span class="propostas__modal-summary-value">{{ rp.versao }}</span>
+          </div>
+          <div class="propostas__modal-summary-row">
+            <span class="propostas__modal-summary-label">Nova versão</span>
+            <span class="propostas__modal-summary-value propostas__modal-summary-value--highlight">{{ rp.versao + 1 }}</span>
+          </div>
+        </div>
+      </div>
+      <div appModalFooter>
+        <app-button variant="ghost" size="sm" (clicked)="fecharRevisaoModal()">Cancelar</app-button>
+        <app-button variant="default" size="sm" (clicked)="confirmarRevisao()">Criar Revisão</app-button>
+      </div>
+    </app-modal>
+  }
+
+  <!-- ── Modal: Copiar Proposta ───────────────────────────── -->
+  @if (copiarProposta(); as cp) {
+    <app-modal
+      [isOpen]="copiarModalOpen()"
+      title="Copiar proposta"
+      size="sm"
+      (closed)="fecharCopiarModal()"
+    >
+      <div class="propostas__modal-body">
+        <p class="propostas__modal-text">
+          Será criada uma nova proposta baseada na proposta {{ cp.numeroProposta }}.
+          Todos os dados serão copiados e você poderá editá-los.
+        </p>
+        <app-select
+          label="Cliente"
+          [options]="clienteOptions()"
+          [(value)]="copiarClienteCnpj"
+        />
+      </div>
+      <div appModalFooter>
+        <app-button variant="ghost" size="sm" (clicked)="fecharCopiarModal()">Cancelar</app-button>
+        <app-button variant="default" size="sm" (clicked)="confirmarCopia()">Copiar e Editar</app-button>
+      </div>
+    </app-modal>
+  }
+
+  <!-- ── Modal: Alterar Status ────────────────────────────── -->
+  @if (statusProposta(); as sp) {
+    <app-modal
+      [isOpen]="statusModalOpen()"
+      title="Alterar status"
+      size="sm"
+      (closed)="fecharStatusModal()"
+    >
+      <div class="propostas__modal-body">
+        <p class="propostas__modal-text">
+          Alterar o status da proposta {{ sp.numeroProposta }}.
+        </p>
+        <div class="propostas__modal-summary">
+          <div class="propostas__modal-summary-row">
+            <span class="propostas__modal-summary-label">Status atual</span>
+            <span class="propostas__modal-summary-value">{{ sp.status }}</span>
+          </div>
+        </div>
+        <app-select
+          label="Novo status"
+          [options]="statusTransicoes()"
+          [(value)]="statusNovoSelecionado"
+          [required]="true"
+          placeholder="Selecione o novo status..."
+        />
+        @if (statusPrecisaMotivo()) {
+          <app-textarea
+            label="Motivo"
+            [(value)]="statusMotivo"
+            [required]="true"
+            placeholder="Informe o motivo..."
+            [rows]="3"
+          />
+        }
+        @if (statusPrecisaDataAceite()) {
+          <app-datepicker
+            label="Data do aceite"
+            [(value)]="statusDataAceite"
+            [required]="true"
+          />
+        }
+      </div>
+      <div appModalFooter>
+        <app-button variant="ghost" size="sm" (clicked)="fecharStatusModal()">Cancelar</app-button>
+        <app-button variant="default" size="sm" [disabled]="!statusFormValido()" (clicked)="confirmarAlteracaoStatus()">Confirmar</app-button>
+      </div>
+    </app-modal>
+  }
+</div>

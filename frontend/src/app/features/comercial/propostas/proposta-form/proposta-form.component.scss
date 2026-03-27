@@ -1,0 +1,726 @@
+@use '../../../../shared/styles/variables' as v;
+
+.proposta-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+
+  // ── Header (edit mode) ────────────────────────────────
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  &__header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__title {
+    font-family: v.$font-family;
+    font-size: 24px;
+    font-weight: 600;
+    color: v.$text-primary;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+
+  &__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__step {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  // ── Card title ────────────────────────────────────────
+  &__card-title {
+    font-family: v.$font-family;
+    font-size: 16px;
+    font-weight: 600;
+    color: v.$text-primary;
+    margin: 0;
+  }
+
+  // ── Grid layouts ──────────────────────────────────────
+  &__grid {
+    display: grid;
+    gap: 16px;
+    margin-top: 16px;
+
+    &--2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    &--4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    @media (max-width: 1024px) {
+      &--3,
+      &--4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 767px) {
+      &--2,
+      &--3,
+      &--4 {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  // ── Standalone field (e.g. badge status) ──────────────
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__label {
+    font-family: v.$font-family;
+    font-size: 14px;
+    font-weight: 500;
+    color: v.$text-secondary;
+  }
+
+  // ── Toggle row (checkbox) ─────────────────────────────
+  &__toggle-row {
+    margin-top: 8px;
+    margin-bottom: 4px;
+  }
+
+  // ── Actions bar ───────────────────────────────────────
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    padding-top: 8px;
+  }
+
+  // ── Step 2 header ─────────────────────────────────────
+  &__step-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__step-title {
+    font-family: v.$font-family;
+    font-size: 24px;
+    font-weight: 600;
+    color: v.$text-primary;
+    letter-spacing: -0.025em;
+    margin: 0;
+  }
+
+  &__step-description {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-secondary;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  // ── Análise Crítica ───────────────────────────────────
+  &__analise-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__analise-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 16px 0;
+    border-bottom: 1px solid v.$border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  }
+
+  &__analise-texto {
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-primary;
+    line-height: 1.5;
+    margin: 0;
+    flex: 1;
+  }
+
+  &__analise-numero {
+    font-weight: 600;
+    color: v.$text-secondary;
+    margin-right: 4px;
+  }
+
+  // ── Radio group ───────────────────────────────────────
+  &__radio-group {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  &__radio {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid v.$border;
+    border-radius: v.$radius-md;
+    cursor: pointer;
+    transition: v.$transition-fast;
+    font-family: v.$font-family;
+
+    input[type='radio'] {
+      display: none;
+    }
+
+    &:hover {
+      border-color: v.$border-hover;
+      background: v.$accent;
+    }
+
+    &--selected {
+      border-color: v.$primary;
+      background: v.$primary-light;
+
+      .proposta-form__radio-label {
+        color: v.$primary;
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__radio-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: v.$text-secondary;
+    white-space: nowrap;
+  }
+
+  // ── Toolbar ───────────────────────────────────────────
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  // ── Empty state ───────────────────────────────────────
+  &__empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 48px 24px;
+    color: v.$text-secondary;
+    text-align: center;
+
+    p {
+      font-family: v.$font-family;
+      font-size: 15px;
+      font-weight: 500;
+      color: v.$text-primary;
+      margin: 8px 0 0;
+    }
+
+    span {
+      font-family: v.$font-family;
+      font-size: 13px;
+      color: v.$text-secondary;
+    }
+  }
+
+  // ── Anexos list ───────────────────────────────────────
+  &__anexos-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__anexos-header {
+    display: grid;
+    grid-template-columns: 1fr 100px 120px 80px;
+    gap: 16px;
+    padding: 10px 16px;
+    font-family: v.$font-family;
+    font-size: 12px;
+    font-weight: 600;
+    color: v.$text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid v.$border;
+  }
+
+  &__anexos-row {
+    display: grid;
+    grid-template-columns: 1fr 100px 120px 80px;
+    gap: 16px;
+    padding: 12px 16px;
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-primary;
+    border-bottom: 1px solid v.$border;
+    cursor: pointer;
+    transition: v.$transition-fast;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: v.$accent;
+    }
+
+    &--selected {
+      background: v.$primary-light;
+      border-color: v.$primary;
+    }
+  }
+
+  &__anexos-col {
+    display: flex;
+    align-items: center;
+
+    &--nome {
+      gap: 8px;
+      font-weight: 500;
+    }
+
+    &--tamanho,
+    &--data,
+    &--versao {
+      color: v.$text-secondary;
+      font-size: 13px;
+    }
+  }
+
+  // ── Card header row (with actions) ────────────────────
+  &__card-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    width: 100%;
+  }
+
+  &__card-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  // ── Instruções de coleta ──────────────────────────────
+  &__instrucoes-coleta {
+    margin-top: 16px;
+  }
+
+  &__checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  // ── Amostras list (master-detail) ─────────────────────
+  &__amostras-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__amostra-item {
+    border-bottom: 1px solid v.$border;
+    transition: v.$transition-fast;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &--selected {
+      background: v.$primary-light;
+    }
+
+    &--expanded {
+      background: v.$accent;
+    }
+  }
+
+  &__amostra-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 16px;
+    cursor: pointer;
+    transition: v.$transition-fast;
+
+    &:hover {
+      background: v.$accent;
+    }
+  }
+
+  &__amostra-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__amostra-expand {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    padding: 4px;
+    color: v.$text-secondary;
+    flex-shrink: 0;
+  }
+
+  &__amostra-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+
+    strong {
+      font-family: v.$font-family;
+      font-size: 14px;
+      font-weight: 600;
+      color: v.$text-primary;
+    }
+  }
+
+  &__amostra-meta {
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$text-secondary;
+  }
+
+  &__amostra-actions {
+    flex-shrink: 0;
+  }
+
+  // ── Parâmetros detail ─────────────────────────────────
+  &__parametros-detail {
+    padding: 0 16px 16px 44px;
+    border-top: 1px solid v.$border;
+  }
+
+  &__parametros-header {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px 100px;
+    gap: 12px;
+    padding: 10px 0;
+    font-family: v.$font-family;
+    font-size: 12px;
+    font-weight: 600;
+    color: v.$text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid v.$border;
+  }
+
+  &__parametros-row {
+    display: grid;
+    grid-template-columns: 1fr 80px 80px 100px;
+    gap: 12px;
+    padding: 8px 0;
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$text-primary;
+    border-bottom: 1px solid v.$border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__param-col {
+    &--preco {
+      text-align: right;
+      font-weight: 500;
+    }
+  }
+
+  &__parametros-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 0 0;
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$primary;
+  }
+
+  // ── Totais ────────────────────────────────────────────
+  &__totais {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__totais-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-primary;
+    border-bottom: 1px solid v.$border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &--desconto {
+      color: v.$text-secondary;
+    }
+
+    &--total {
+      border-bottom: none;
+      padding-top: 16px;
+      font-size: 16px;
+
+      strong {
+        color: v.$primary;
+        font-size: 20px;
+      }
+    }
+  }
+
+  &__desconto-input {
+    max-width: 200px;
+  }
+
+  // ── Parâmetro selection (modal) ───────────────────────
+  &__param-selection {
+    margin-top: 20px;
+  }
+
+  &__param-selection-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &__param-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 240px;
+    overflow-y: auto;
+    border: 1px solid v.$border;
+    border-radius: v.$radius-md;
+    padding: 8px;
+  }
+
+  &__param-checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 8px;
+    border-radius: v.$radius-sm;
+    transition: v.$transition-fast;
+    cursor: pointer;
+
+    &:hover {
+      background: v.$accent;
+    }
+
+    &--checked {
+      background: v.$primary-light;
+    }
+  }
+
+  &__param-price {
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$text-secondary;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  &__param-summary {
+    margin-top: 8px;
+    font-family: v.$font-family;
+    font-size: 13px;
+    color: v.$primary;
+    font-weight: 500;
+  }
+
+  // ── Pacotes list (modal) ──────────────────────────────
+  &__pacotes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__pacote-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid v.$border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__pacote-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong {
+      font-family: v.$font-family;
+      font-size: 14px;
+      color: v.$text-primary;
+    }
+
+    span {
+      font-family: v.$font-family;
+      font-size: 13px;
+      color: v.$text-secondary;
+    }
+  }
+
+  &__pacote-count {
+    font-weight: 500;
+    color: v.$primary !important;
+  }
+
+  // ── Review (Step 4) ───────────────────────────────────
+  &__review-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+
+    @media (max-width: 767px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  &__review-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__review-label {
+    font-family: v.$font-family;
+    font-size: 12px;
+    font-weight: 600;
+    color: v.$text-secondary;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &__review-value {
+    font-family: v.$font-family;
+    font-size: 14px;
+    font-weight: 500;
+    color: v.$text-primary;
+  }
+
+  &__review-amostras {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__review-amostra {
+    padding: 16px 0;
+    border-bottom: 1px solid v.$border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__review-amostra-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+
+    strong {
+      font-family: v.$font-family;
+      font-size: 14px;
+      color: v.$text-primary;
+    }
+
+    span {
+      font-family: v.$font-family;
+      font-size: 13px;
+      color: v.$text-secondary;
+    }
+  }
+
+  &__review-params {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  &__review-param-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: v.$radius-full;
+    font-family: v.$font-family;
+    font-size: 12px;
+    font-weight: 500;
+    color: v.$primary;
+    background: v.$primary-light;
+    border: 1px solid rgba(v.$primary, 0.2);
+  }
+
+  &__review-analise {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  &__review-analise-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid v.$border;
+    font-family: v.$font-family;
+    font-size: 14px;
+    color: v.$text-primary;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}

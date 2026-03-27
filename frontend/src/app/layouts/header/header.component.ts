@@ -5,8 +5,16 @@ import {
   LUCIDE_ICONS,
   LucideIconProvider,
   ChevronDown,
+  Database,
+  FileCheck,
+  FlaskConical,
+  Handshake,
+  LayoutDashboard,
   LogOut,
   Menu,
+  Settings,
+  ShieldCheck,
+  Wallet,
   X,
 } from 'lucide-angular';
 import { AvatarComponent } from '../../shared/components/avatar/avatar.component';
@@ -14,6 +22,7 @@ import { AvatarComponent } from '../../shared/components/avatar/avatar.component
 export interface INavItem {
   label: string;
   route: string;
+  icon?: string;
 }
 
 @Component({
@@ -25,8 +34,16 @@ export interface INavItem {
       provide: LUCIDE_ICONS,
       useValue: new LucideIconProvider({
         ChevronDown,
+        Database,
+        FileCheck,
+        FlaskConical,
+        Handshake,
+        LayoutDashboard,
         LogOut,
         Menu,
+        Settings,
+        ShieldCheck,
+        Wallet,
         X,
       }),
       multi: true,

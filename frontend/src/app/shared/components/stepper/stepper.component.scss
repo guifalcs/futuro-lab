@@ -1,0 +1,105 @@
+@use '../../../shared/styles/variables' as v;
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+
+  &__step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    cursor: default;
+    user-select: none;
+
+    &--clickable {
+      cursor: pointer;
+
+      &:hover .stepper__circle {
+        box-shadow: 0 0 0 3px v.$ring;
+      }
+    }
+
+    &--disabled {
+      opacity: 0.5;
+    }
+  }
+
+  &__circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: v.$radius-full;
+    font-family: v.$font-family;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+    transition: v.$transition-fast;
+    background: v.$muted;
+    color: v.$muted-foreground;
+    border: 2px solid v.$border;
+
+    .stepper__step--current & {
+      background: v.$primary;
+      color: v.$primary-foreground;
+      border-color: v.$primary;
+    }
+
+    .stepper__step--completed & {
+      background: v.$success;
+      color: #fff;
+      border-color: v.$success;
+    }
+  }
+
+  &__label {
+    font-family: v.$font-family;
+    font-size: 13px;
+    font-weight: 500;
+    color: v.$text-muted;
+
+    .stepper__step--current & {
+      color: v.$text-primary;
+      font-weight: 600;
+    }
+
+    .stepper__step--completed & {
+      color: v.$text-secondary;
+    }
+
+    .stepper__step--disabled & {
+      color: v.$text-muted;
+    }
+  }
+
+  &__connector {
+    flex: 1;
+    height: 2px;
+    min-width: 24px;
+    margin: 0 12px;
+    background: v.$border;
+    border-radius: 1px;
+    transition: background 200ms ease;
+
+    &--completed {
+      background: v.$success;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .stepper {
+    &__label {
+      display: none;
+    }
+
+    &__connector {
+      min-width: 16px;
+      margin: 0 8px;
+    }
+  }
+}

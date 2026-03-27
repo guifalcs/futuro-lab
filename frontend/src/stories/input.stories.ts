@@ -12,6 +12,10 @@ const meta: Meta<InputComponent> = {
       control: 'select',
       options: ['text', 'email', 'number', 'tel', 'url', 'search'],
     },
+    mask: {
+      control: 'select',
+      options: [null, 'cpf', 'cnpj', 'telefone'],
+    },
   },
   // Defaults explícitos garantem que todos os props estão sempre no context do template
   args: {
@@ -21,6 +25,7 @@ const meta: Meta<InputComponent> = {
     error: '',
     disabled: false,
     required: false,
+    mask: null,
     value: '',
     focused: fn(),
     blurred: fn(),
@@ -34,6 +39,7 @@ const meta: Meta<InputComponent> = {
       [error]="error"
       [disabled]="disabled"
       [required]="required"
+      [mask]="mask"
       [value]="value"
       (focused)="focused()"
       (blurred)="blurred()"
@@ -92,5 +98,29 @@ export const Search: Story = {
   args: {
     type: 'search',
     placeholder: 'Buscar...',
+  },
+};
+
+export const MaskCPF: Story = {
+  args: {
+    label: 'CPF',
+    placeholder: '000.000.000-00',
+    mask: 'cpf',
+  },
+};
+
+export const MaskCNPJ: Story = {
+  args: {
+    label: 'CNPJ',
+    placeholder: '00.000.000/0001-00',
+    mask: 'cnpj',
+  },
+};
+
+export const MaskTelefone: Story = {
+  args: {
+    label: 'Telefone',
+    placeholder: '(00) 00000-0000',
+    mask: 'telefone',
   },
 };

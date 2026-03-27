@@ -28,6 +28,9 @@
         [ngClass]="{ 'header__nav-item--active': item.route === activeRoute() }"
         (click)="onNavClick(item.route)"
       >
+        @if (item.icon) {
+          <lucide-angular [name]="item.icon" [size]="16" [strokeWidth]="1.75" />
+        }
         {{ item.label }}
       </button>
     }
@@ -80,6 +83,9 @@
         [ngClass]="{ 'header__mobile-item--active': item.route === activeRoute() }"
         (click)="onNavClick(item.route)"
       >
+        @if (item.icon) {
+          <lucide-angular [name]="item.icon" [size]="18" [strokeWidth]="1.75" />
+        }
         {{ item.label }}
       </button>
     }

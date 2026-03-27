@@ -1,0 +1,413 @@
+@if (proposta(); as p) {
+  <div class="proposta-view">
+    <!-- Header -->
+    <div class="proposta-view__header">
+      <div class="proposta-view__header-left">
+        <h1 class="proposta-view__title">
+          Proposta {{ p.numeroProposta }}
+        </h1>
+        <app-badge [variant]="getStatusVariant(p.status)" [text]="p.status" size="md" />
+      </div>
+      <div class="proposta-view__header-actions">
+        <app-button variant="outline" size="sm" (clicked)="editar()">
+          <lucide-angular name="pencil" [size]="14" [strokeWidth]="2" />
+          Editar
+        </app-button>
+        <app-button variant="outline" size="sm" (clicked)="abrirRevisaoModal()">
+          <lucide-angular name="copy-plus" [size]="14" [strokeWidth]="2" />
+          Criar Revisão
+        </app-button>
+        @if (podeAlterarStatus()) {
+          <app-button variant="outline" size="sm" (clicked)="abrirStatusModal()">
+            <lucide-angular name="arrow-right-left" [size]="14" [strokeWidth]="2" />
+            Alterar Status
+          </app-button>
+        }
+        <app-button variant="default" size="sm" [disabled]="true">
+          <lucide-angular name="send" [size]="14" [strokeWidth]="2" />
+          Enviar ao Cliente
+        </app-button>
+        <app-button variant="ghost" size="sm" (clicked)="voltar()">
+          <lucide-angular name="arrow-left" [size]="14" [strokeWidth]="2" />
+          Voltar
+        </app-button>
+      </div>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="proposta-view__grid">
+
+      <!-- Card: Identificação -->
+      <app-card>
+        <div appCardHeader>
+          <div class="proposta-view__card-header">
+            <lucide-angular name="file-text" [size]="18" [strokeWidth]="1.75" />
+            <h2 class="proposta-view__card-title">Identificação</h2>
+          </div>
+        </div>
+        <div class="proposta-view__fields proposta-view__fields--3">
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Nº Proposta</span>
+            <span class="proposta-view__value">{{ p.numeroProposta }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Versão</span>
+            <span class="proposta-view__value">{{ p.versao }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Modelo</span>
+            <span class="proposta-view__value">{{ p.modeloProposta }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Centro de Serviços</span>
+            <span class="proposta-view__value">{{ p.centroServicos }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Status</span>
+            <app-badge [variant]="getStatusVariant(p.status)" [text]="p.status" size="sm" />
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Responsável</span>
+            <span class="proposta-view__value">{{ p.responsavel }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Data de Criação</span>
+            <span class="proposta-view__value">{{ p.dataCriacao | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Data de Validade</span>
+            <span class="proposta-view__value">{{ p.dataValidade | date: 'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Card: Cliente -->
+      <app-card>
+        <div appCardHeader>
+          <div class="proposta-view__card-header">
+            <lucide-angular name="building-2" [size]="18" [strokeWidth]="1.75" />
+            <h2 class="proposta-view__card-title">Cliente</h2>
+          </div>
+        </div>
+        <div class="proposta-view__fields proposta-view__fields--2">
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Razão Social</span>
+            <span class="proposta-view__value">{{ p.cliente }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Nome Fantasia</span>
+            <span class="proposta-view__value">{{ p.nomeFantasiaCliente }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">CNPJ</span>
+            <span class="proposta-view__value proposta-view__value--mono">{{ p.cnpjCliente }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Unidade</span>
+            <span class="proposta-view__value">{{ p.unidadeCliente }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Email</span>
+            <span class="proposta-view__value">{{ p.emailCliente }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Telefone</span>
+            <span class="proposta-view__value">{{ p.telefoneCliente }}</span>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Card: Solicitante -->
+      <app-card>
+        <div appCardHeader>
+          <div class="proposta-view__card-header">
+            <lucide-angular name="user" [size]="18" [strokeWidth]="1.75" />
+            <h2 class="proposta-view__card-title">Solicitante</h2>
+          </div>
+        </div>
+        <div class="proposta-view__fields proposta-view__fields--2">
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Solicitante</span>
+            <span class="proposta-view__value">{{ p.solicitante }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Envio da proposta para</span>
+            <span class="proposta-view__value">{{ p.envioPropostaPara }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Cobrança para</span>
+            <span class="proposta-view__value">{{ p.cobrancaPara }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Resultado final para</span>
+            <span class="proposta-view__value">{{ p.resultadoPara }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Email proposta</span>
+            <span class="proposta-view__value">{{ p.emailProposta }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Email cobrança</span>
+            <span class="proposta-view__value">{{ p.emailCobranca }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Email resultado</span>
+            <span class="proposta-view__value">{{ p.emailResultado }}</span>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Card: Prazo e Pagamento -->
+      <app-card>
+        <div appCardHeader>
+          <div class="proposta-view__card-header">
+            <lucide-angular name="calendar-days" [size]="18" [strokeWidth]="1.75" />
+            <h2 class="proposta-view__card-title">Prazo e Pagamento</h2>
+          </div>
+        </div>
+        <div class="proposta-view__fields proposta-view__fields--2">
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Data de Criação</span>
+            <span class="proposta-view__value">{{ p.dataCriacao | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Data de Validade</span>
+            <span class="proposta-view__value">{{ p.dataValidade | date: 'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Prazo de liberação dos resultados</span>
+            <span class="proposta-view__value">{{ p.prazoLiberacaoDias }} dias corridos</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Ciclo de Pagamento</span>
+            <span class="proposta-view__value">{{ p.cicloPagamento }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Tipo de Contrato</span>
+            <span class="proposta-view__value">{{ p.tipoContrato }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Condições de Pagamento</span>
+            <span class="proposta-view__value">{{ p.condicoesPagamento }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Cobrança na</span>
+            <span class="proposta-view__value">{{ p.cobrancaNa }}</span>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Card: Valores (full width) -->
+      <app-card class="proposta-view__full-width">
+        <div appCardHeader>
+          <div class="proposta-view__card-header">
+            <lucide-angular name="dollar-sign" [size]="18" [strokeWidth]="1.75" />
+            <h2 class="proposta-view__card-title">Valores</h2>
+          </div>
+        </div>
+        <div class="proposta-view__valores">
+          <div class="proposta-view__valor-principal">
+            <span class="proposta-view__label">Total da Proposta</span>
+            <span class="proposta-view__valor-destaque">{{ p.totalReais | currency: 'BRL' : 'symbol' : '1.2-2' }}</span>
+          </div>
+          <div class="proposta-view__field">
+            <span class="proposta-view__label">Exibição de preços</span>
+            <span class="proposta-view__value">{{ p.exibicaoPrecos }}</span>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Card: Análise Crítica (full width) -->
+      <app-card class="proposta-view__full-width">
+        <div appCardHeader>
+          <div class="proposta-view__card-header">
+            <lucide-angular name="shield-check" [size]="18" [strokeWidth]="1.75" />
+            <h2 class="proposta-view__card-title">Análise Crítica</h2>
+            @if (analiseAprovada()) {
+              <app-badge variant="success" text="✓ Aprovada" size="sm" />
+            } @else {
+              <app-badge variant="danger" text="✗ Reprovada" size="sm" />
+            }
+          </div>
+        </div>
+        <div class="proposta-view__analise-list">
+          @for (item of analiseLabels; track item.key) {
+            <div class="proposta-view__analise-item">
+              <span class="proposta-view__analise-texto">{{ item.label }}</span>
+              <app-badge
+                [variant]="getRespostaBadge(p.analiseCritica[item.key]).variant"
+                [text]="getRespostaBadge(p.analiseCritica[item.key]).text"
+                size="sm"
+              />
+            </div>
+          }
+        </div>
+      </app-card>
+
+      <!-- Card: Observações (full width, conditional) -->
+      @if (temObservacoes()) {
+        <app-card class="proposta-view__full-width">
+          <div appCardHeader>
+            <div class="proposta-view__card-header">
+              <lucide-angular name="message-square" [size]="18" [strokeWidth]="1.75" />
+              <h2 class="proposta-view__card-title">Observações</h2>
+            </div>
+          </div>
+          <div class="proposta-view__fields proposta-view__fields--2">
+            @if (p.observacoesInternas) {
+              <div class="proposta-view__field">
+                <span class="proposta-view__label">Observações internas</span>
+                <span class="proposta-view__value">{{ p.observacoesInternas }}</span>
+              </div>
+            }
+            @if (p.observacoesFinanceiras) {
+              <div class="proposta-view__field">
+                <span class="proposta-view__label">Observações financeiras</span>
+                <span class="proposta-view__value">{{ p.observacoesFinanceiras }}</span>
+              </div>
+            }
+          </div>
+        </app-card>
+      }
+
+      <!-- Card: Histórico de Versões (full width) -->
+      <app-card class="proposta-view__full-width">
+        <div appCardHeader>
+          <div class="proposta-view__card-header">
+            <lucide-angular name="history" [size]="18" [strokeWidth]="1.75" />
+            <h2 class="proposta-view__card-title">Histórico de Versões</h2>
+          </div>
+        </div>
+        <app-table
+          [columns]="versoesColumns"
+          [data]="versoesData()"
+        >
+          <ng-template appTableCell="data" let-row>
+            {{ row.data | date: 'dd/MM/yyyy' }}
+          </ng-template>
+          <ng-template appTableCell="status" let-row>
+            <app-badge [variant]="getStatusVariant(row.status)" [text]="row.status" size="sm" />
+          </ng-template>
+        </app-table>
+      </app-card>
+
+      <!-- Card: Histórico de Status (full width, conditional) -->
+      @if (historicoStatusData().length > 0) {
+        <app-card class="proposta-view__full-width">
+          <div appCardHeader>
+            <div class="proposta-view__card-header">
+              <lucide-angular name="arrow-right-left" [size]="18" [strokeWidth]="1.75" />
+              <h2 class="proposta-view__card-title">Histórico de Alterações de Status</h2>
+            </div>
+          </div>
+          <app-table
+            [columns]="historicoStatusColumns"
+            [data]="historicoStatusData()"
+          >
+            <ng-template appTableCell="data" let-row>
+              {{ row.data | date: 'dd/MM/yyyy HH:mm' }}
+            </ng-template>
+            <ng-template appTableCell="statusAnterior" let-row>
+              <app-badge [variant]="getStatusVariant(row.statusAnterior)" [text]="row.statusAnterior" size="sm" />
+            </ng-template>
+            <ng-template appTableCell="statusNovo" let-row>
+              <app-badge [variant]="getStatusVariant(row.statusNovo)" [text]="row.statusNovo" size="sm" />
+            </ng-template>
+            <ng-template appTableCell="motivo" let-row>
+              {{ row.motivo || '—' }}
+            </ng-template>
+          </app-table>
+        </app-card>
+      }
+
+    </div>
+
+    <!-- ── Modal: Criar Revisão ─────────────────────────────── -->
+    <app-modal
+      [isOpen]="revisaoModalOpen()"
+      title="Criar revisão"
+      size="sm"
+      (closed)="fecharRevisaoModal()"
+    >
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <p style="margin: 0; color: #4B5563; font-size: 14px; line-height: 1.5;">
+          Será criada a versão {{ p.versao + 1 }} da proposta {{ p.numeroProposta }}.
+          A versão atual será mantida no histórico como readonly.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; background: #f3f4f6; border-radius: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; color: #9ca3af;">Proposta</span>
+            <span style="font-size: 13px; font-weight: 600; color: #111827;">{{ p.numeroProposta }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; color: #9ca3af;">Versão atual</span>
+            <span style="font-size: 13px; font-weight: 600; color: #111827;">{{ p.versao }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <span style="font-size: 13px; color: #9ca3af;">Nova versão</span>
+            <span style="font-size: 13px; font-weight: 600; color: #1D6AA5;">{{ p.versao + 1 }}</span>
+          </div>
+        </div>
+      </div>
+      <div appModalFooter>
+        <app-button variant="ghost" size="sm" (clicked)="fecharRevisaoModal()">Cancelar</app-button>
+        <app-button variant="default" size="sm" (clicked)="confirmarRevisao()">Criar Revisão</app-button>
+      </div>
+    </app-modal>
+
+    <!-- ── Modal: Alterar Status ─────────────────────────────── -->
+    <app-modal
+      [isOpen]="statusModalOpen()"
+      title="Alterar status"
+      size="sm"
+      (closed)="fecharStatusModal()"
+    >
+      <div class="proposta-view__modal-body">
+        <p class="proposta-view__modal-text">
+          Alterar o status da proposta {{ p.numeroProposta }}.
+        </p>
+        <div class="proposta-view__modal-summary">
+          <div class="proposta-view__modal-summary-row">
+            <span class="proposta-view__modal-summary-label">Status atual</span>
+            <app-badge [variant]="getStatusVariant(p.status)" [text]="p.status" size="sm" />
+          </div>
+        </div>
+        <app-select
+          label="Novo status"
+          [options]="transicoesDisponiveis()"
+          [(value)]="statusNovoSelecionado"
+          [required]="true"
+          placeholder="Selecione o novo status..."
+        />
+        @if (precisaMotivo()) {
+          <app-textarea
+            label="Motivo"
+            [(value)]="statusMotivo"
+            [required]="true"
+            placeholder="Informe o motivo..."
+            [rows]="3"
+          />
+        }
+        @if (precisaDataAceite()) {
+          <app-datepicker
+            label="Data do aceite"
+            [(value)]="statusDataAceite"
+            [required]="true"
+          />
+        }
+      </div>
+      <div appModalFooter>
+        <app-button variant="ghost" size="sm" (clicked)="fecharStatusModal()">Cancelar</app-button>
+        <app-button variant="default" size="sm" [disabled]="!statusFormValido()" (clicked)="confirmarAlteracaoStatus()">Confirmar</app-button>
+      </div>
+    </app-modal>
+  </div>
+} @else {
+  <div class="proposta-view proposta-view--not-found">
+    <h2>Proposta não encontrada</h2>
+    <app-button variant="outline" (clicked)="voltar()">
+      <lucide-angular name="arrow-left" [size]="16" [strokeWidth]="2" />
+      Voltar para listagem
+    </app-button>
+  </div>
+}

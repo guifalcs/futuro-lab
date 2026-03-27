@@ -1,0 +1,88 @@
+@if (hasLabel()) {
+  <label class="datepicker__label" [for]="inputId">
+    {{ label() }}
+    @if (required()) {
+      <span class="datepicker__required" aria-hidden="true">*</span>
+    }
+  </label>
+}
+
+<div class="datepicker__trigger">
+  <button
+    [id]="inputId"
+    type="button"
+    class="datepicker__button"
+    [class.datepicker__button--error]="hasError()"
+    [class.datepicker__button--disabled]="disabled()"
+    [class.datepicker__button--open]="isOpen()"
+    [attr.disabled]="disabled() ? '' : null"
+    [attr.aria-expanded]="isOpen()"
+    [attr.aria-required]="required() ? true : null"
+    aria-haspopup="dialog"
+    (click)="toggleDropdown()"
+  >
+    <span class="datepicker__value" [class.datepicker__value--placeholder]="!displayValue()">
+      {{ displayValue() || placeholder() }}
+    </span>
+    <lucide-angular
+      name="calendar"
+      class="datepicker__icon"
+      [size]="16"
+    />
+  </button>
+
+  @if (isOpen()) {
+    <div class="datepicker__dropdown" role="dialog" aria-label="Calendário">
+      <div class="datepicker__header">
+        <button
+          type="button"
+          class="datepicker__nav-btn"
+          aria-label="Mês anterior"
+          (click)="prevMonth(); $event.stopPropagation()"
+        >
+          <lucide-angular name="chevron-left" [size]="16" />
+        </button>
+
+        <span class="datepicker__month-label">{{ currentMonthLabel() }}</span>
+
+        <button
+          type="button"
+          class="datepicker__nav-btn"
+          aria-label="Próximo mês"
+          (click)="nextMonth(); $event.stopPropagation()"
+        >
+          <lucide-angular name="chevron-right" [size]="16" />
+        </button>
+      </div>
+
+      <div class="datepicker__weekdays">
+        @for (day of weekDays; track day) {
+          <span class="datepicker__weekday">{{ day }}</span>
+        }
+      </div>
+
+      <div class="datepicker__grid" role="grid">
+        @for (day of calendarDays(); track trackByDay($index, day)) {
+          <button
+            type="button"
+            class="datepicker__day"
+            [class.datepicker__day--outside]="!day.isCurrentMonth"
+            [class.datepicker__day--today]="day.isToday"
+            [class.datepicker__day--selected]="day.isSelected"
+            [class.datepicker__day--disabled]="day.isDisabled"
+            [attr.disabled]="day.isDisabled ? '' : null"
+            [attr.aria-selected]="day.isSelected"
+            [attr.aria-label]="day.date | date:'d \'de\' MMMM \'de\' yyyy'"
+            (click)="selectDate(day.date); $event.stopPropagation()"
+          >
+            {{ day.day }}
+          </button>
+        }
+      </div>
+    </div>
+  }
+</div>
+
+@if (hasError()) {
+  <span class="datepicker__error" role="alert" [id]="inputId + '-error'">{{ error() }}</span>
+}

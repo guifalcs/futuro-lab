@@ -1,0 +1,971 @@
+<div class="proposta-form">
+
+  <!-- -- Header ----------------------------------------------- -->
+  @if (mode === 'editar') {
+    <div class="proposta-form__header">
+      <div class="proposta-form__header-left">
+        <h1 class="proposta-form__title">Editar Proposta {{ numeroProposta() }}</h1>
+        <app-badge [variant]="getStatusVariant()" [text]="status()" size="md" />
+      </div>
+      <div class="proposta-form__header-actions">
+        <app-button variant="outline" size="sm" (clicked)="abrirAnaliseCritica()">
+          <lucide-angular name="clipboard-check" [size]="14" [strokeWidth]="2" />
+          Análise Crítica
+          @if (analiseCriticaPreenchida()) {
+            <app-badge variant="success" text="OK" size="sm" />
+          }
+        </app-button>
+        <app-button variant="ghost" size="sm" (clicked)="visualizar()">
+          <lucide-angular name="eye" [size]="14" [strokeWidth]="2" />
+          Visualizar
+        </app-button>
+        <app-button variant="ghost" size="sm" (clicked)="voltarListagem()">
+          <lucide-angular name="arrow-left" [size]="14" [strokeWidth]="2" />
+          Voltar à listagem
+        </app-button>
+      </div>
+    </div>
+  } @else {
+    <div class="proposta-form__header">
+      <div class="proposta-form__header-left">
+        <h1 class="proposta-form__title">Nova Proposta</h1>
+      </div>
+      <div class="proposta-form__header-actions">
+        <app-button variant="outline" size="sm" (clicked)="abrirAnaliseCritica()">
+          <lucide-angular name="clipboard-check" [size]="14" [strokeWidth]="2" />
+          Análise Crítica
+          @if (analiseCriticaPreenchida()) {
+            <app-badge variant="success" text="OK" size="sm" />
+          }
+        </app-button>
+      </div>
+    </div>
+  }
+
+  <!-- Stepper -->
+  <app-stepper
+    [steps]="steps"
+    [currentStep]="currentStep()"
+    (stepClick)="goToStep($event)"
+  />
+
+  <!-- ════════════════════════════════════════════════════════════
+       STEP 1: Dados da Proposta
+       ════════════════════════════════════════════════════════════ -->
+  @if (currentStep() === 0) {
+    <div class="proposta-form__step">
+
+      <!-- Card: Identificação -->
+      <app-card>
+        <div appCardHeader>
+          <h2 class="proposta-form__card-title">Identificação</h2>
+        </div>
+
+        <div class="proposta-form__grid proposta-form__grid--4">
+          <app-input
+            label="Nº Proposta"
+            [value]="numeroProposta()"
+            [disabled]="true"
+          />
+          <app-select
+            label="Modelo da Proposta"
+            [options]="modeloOptions"
+            [(value)]="modeloProposta"
+          />
+          <app-select
+            label="Centro de Serviços"
+            [options]="centroOptions"
+            [(value)]="centroServico"
+          />
+          @if (mode === 'editar') {
+            <app-select
+              label="Status"
+              [options]="statusOptions"
+              [(value)]="status"
+            />
+          } @else {
+            <div class="proposta-form__field">
+              <span class="proposta-form__label">Status</span>
+              <app-badge variant="neutral" text="Em elaboração" size="md" />
+            </div>
+          }
+        </div>
+      </app-card>
+
+      <!-- Card: Solicitante -->
+      <app-card>
+        <div appCardHeader>
+          <h2 class="proposta-form__card-title">Solicitante</h2>
+        </div>
+
+        <div class="proposta-form__grid proposta-form__grid--2">
+          <app-select
+            label="Solicitante"
+            placeholder="Buscar solicitante..."
+            [options]="solicitanteOptions()"
+            [(value)]="solicitanteId"
+            [required]="true"
+            [disabled]="solicitanteDisabled()"
+          />
+        </div>
+
+        <div class="proposta-form__grid proposta-form__grid--3">
+          <app-select
+            label="Envio da proposta para"
+            [options]="envioOptions"
+            [(value)]="envioPara"
+            [disabled]="solicitanteDisabled()"
+          />
+          <app-select
+            label="Cobrança para"
+            [options]="envioOptions"
+            [(value)]="cobrancaPara"
+            [disabled]="solicitanteDisabled()"
+          />
+          <app-select
+            label="Resultado final para"
+            [options]="envioOptions"
+            [(value)]="resultadoPara"
+            [disabled]="solicitanteDisabled()"
+          />
+        </div>
+
+        <div class="proposta-form__grid proposta-form__grid--3">
+          <app-select
+            label="Email proposta"
+            placeholder="Selecione o contato..."
+            [options]="solicitanteContatos()"
+            [(value)]="emailProposta"
+            [disabled]="solicitanteDisabled()"
+          />
+          <app-select
+            label="Email cobrança"
+            placeholder="Selecione o contato..."
+            [options]="clienteContatos()"
+            [(value)]="emailCobranca"
+            [disabled]="solicitanteDisabled()"
+          />
+          <app-select
+            label="Email resultado"
+            placeholder="Selecione o contato..."
+            [options]="clienteContatos()"
+            [(value)]="emailResultado"
+            [disabled]="solicitanteDisabled()"
+          />
+        </div>
+      </app-card>
+
+      <!-- Card: Cliente -->
+      <app-card>
+        <div appCardHeader>
+          <h2 class="proposta-form__card-title">Cliente</h2>
+        </div>
+
+        <div class="proposta-form__toggle-row">
+          <app-checkbox
+            label="Novo cliente"
+            [(checked)]="clienteNovo"
+            [disabled]="clienteDisabled()"
+          />
+        </div>
+
+        @if (!clienteNovo()) {
+          <div class="proposta-form__grid proposta-form__grid--2">
+            <app-select
+              label="Selecione o cliente"
+              placeholder="Buscar cliente..."
+              [options]="clienteOptions()"
+              [(value)]="clienteId"
+              [required]="true"
+              [disabled]="clienteDisabled()"
+            />
+            <app-select
+              label="Unidade"
+              placeholder="Selecione a unidade..."
+              [options]="unidadeOptions()"
+              [(value)]="clienteUnidade"
+              [disabled]="clienteDisabled()"
+            />
+          </div>
+        } @else {
+          <div class="proposta-form__grid proposta-form__grid--2" style="margin-bottom: 16px;">
+            <app-select
+              label="Tipo de pessoa"
+              [options]="tipoPessoaOptions"
+              [(value)]="tipoPessoa"
+              [disabled]="clienteDisabled()"
+            />
+          </div>
+
+          @if (tipoPessoa() === 'pj') {
+            <div class="proposta-form__grid proposta-form__grid--2">
+              <app-input
+                label="Razão Social"
+                placeholder="Razão social da empresa"
+                [(value)]="novoRazaoSocial"
+                [required]="true"
+                [disabled]="clienteDisabled()"
+              />
+              <app-input
+                label="Nome Fantasia"
+                placeholder="Nome fantasia"
+                [(value)]="novoNomeFantasia"
+                [disabled]="clienteDisabled()"
+              />
+            </div>
+            <div class="proposta-form__grid proposta-form__grid--3">
+              <app-input
+                label="CNPJ"
+                placeholder="00.000.000/0001-00"
+                mask="cnpj"
+                [(value)]="novoCnpj"
+                [required]="true"
+                [disabled]="clienteDisabled()"
+              />
+              <app-input
+                label="Email"
+                type="email"
+                placeholder="email@empresa.com.br"
+                [(value)]="novoEmailPj"
+                [disabled]="clienteDisabled()"
+              />
+              <app-input
+                label="Telefone"
+                type="tel"
+                placeholder="(00) 0000-0000"
+                [(value)]="novoTelefonePj"
+                [disabled]="clienteDisabled()"
+              />
+            </div>
+          } @else {
+            <div class="proposta-form__grid proposta-form__grid--2">
+              <app-input
+                label="Nome"
+                placeholder="Nome completo"
+                [(value)]="novoNomePf"
+                [required]="true"
+                [disabled]="clienteDisabled()"
+              />
+              <app-input
+                label="CPF"
+                placeholder="000.000.000-00"
+                mask="cpf"
+                [(value)]="novoCpf"
+                [required]="true"
+                [disabled]="clienteDisabled()"
+              />
+            </div>
+            <div class="proposta-form__grid proposta-form__grid--2">
+              <app-input
+                label="Email"
+                type="email"
+                placeholder="email@exemplo.com"
+                [(value)]="novoEmailPf"
+                [disabled]="clienteDisabled()"
+              />
+              <app-input
+                label="Telefone"
+                type="tel"
+                placeholder="(00) 0000-0000"
+                [(value)]="novoTelefonePf"
+                [disabled]="clienteDisabled()"
+              />
+            </div>
+          }
+        }
+      </app-card>
+
+      <!-- Card: Prazo e Pagamento -->
+      <app-card>
+        <div appCardHeader>
+          <h2 class="proposta-form__card-title">Prazo e Pagamento</h2>
+        </div>
+
+        <div class="proposta-form__grid proposta-form__grid--3">
+          <app-datepicker
+            label="Data criação"
+            [value]="dataCriacao()"
+            [disabled]="true"
+          />
+          <app-datepicker
+            label="Data validade"
+            [(value)]="dataValidade"
+          />
+          <app-select
+            label="Ciclo de pagamento"
+            [options]="cicloOptions"
+            [(value)]="cicloPagamento"
+          />
+        </div>
+
+        <div class="proposta-form__grid proposta-form__grid--3">
+          <app-select
+            label="Tipo de contrato"
+            [options]="tipoContratoOptions"
+            [(value)]="tipoContrato"
+          />
+          <app-select
+            label="Condições de pagamento"
+            [options]="condicoesOptions"
+            [(value)]="condicaoPagamento"
+          />
+          <app-select
+            label="Cobrança na"
+            [options]="cobrancaNaOptions"
+            [(value)]="cobrancaNa"
+          />
+        </div>
+      </app-card>
+
+      <!-- Card: Observações -->
+      <app-card>
+        <div appCardHeader>
+          <h2 class="proposta-form__card-title">Observações</h2>
+        </div>
+
+        <div class="proposta-form__grid proposta-form__grid--2">
+          <app-textarea
+            label="Observações internas"
+            placeholder="Observações visíveis apenas para a equipe..."
+            [rows]="4"
+            [(value)]="obsInternas"
+          />
+          <app-textarea
+            label="Observações financeiras"
+            placeholder="Observações sobre pagamento, faturamento..."
+            [rows]="4"
+            [(value)]="obsFinanceiras"
+          />
+        </div>
+      </app-card>
+
+      <!-- Botões Step 1 -->
+      <div class="proposta-form__actions">
+        <app-button variant="ghost" (clicked)="cancelar()">
+          <lucide-angular name="x" [size]="16" [strokeWidth]="2" />
+          Cancelar
+        </app-button>
+        <app-button variant="default" (clicked)="avancar()">
+          Avançar
+          <lucide-angular name="arrow-right" [size]="16" [strokeWidth]="2" />
+        </app-button>
+      </div>
+    </div>
+  }
+
+  <!-- ════════════════════════════════════════════════════════════
+       STEP 2: Anexos
+       ════════════════════════════════════════════════════════════ -->
+  @if (currentStep() === 1) {
+    <div class="proposta-form__step">
+
+      <div class="proposta-form__step-header">
+        <h2 class="proposta-form__step-title">Anexos</h2>
+        <p class="proposta-form__step-description">
+          Adicione documentos relevantes à proposta: mapas, licenças, planilhas e demais arquivos.
+        </p>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="proposta-form__toolbar">
+        <app-button variant="default" size="sm" (clicked)="adicionarAnexo()">
+          <lucide-angular name="upload" [size]="14" [strokeWidth]="2" />
+          Adicionar Anexo
+        </app-button>
+        <app-button variant="outline" size="sm" (clicked)="removerAnexo()">
+          <lucide-angular name="trash-2" [size]="14" [strokeWidth]="2" />
+          Remover
+        </app-button>
+      </div>
+
+      <!-- Tabela de anexos -->
+      <app-card>
+        @if (anexos().length === 0) {
+          <div class="proposta-form__empty-state">
+            <lucide-angular name="file-text" [size]="40" [strokeWidth]="1.5" />
+            <p>Nenhum anexo adicionado.</p>
+            <span>Clique em "Adicionar Anexo" para incluir documentos à proposta.</span>
+          </div>
+        } @else {
+          <div class="proposta-form__anexos-list">
+            <div class="proposta-form__anexos-header">
+              <span class="proposta-form__anexos-col proposta-form__anexos-col--nome">Nome</span>
+              <span class="proposta-form__anexos-col proposta-form__anexos-col--tamanho">Tamanho</span>
+              <span class="proposta-form__anexos-col proposta-form__anexos-col--data">Data Upload</span>
+              <span class="proposta-form__anexos-col proposta-form__anexos-col--versao">Versão</span>
+            </div>
+            @for (anexo of anexos(); track anexo.id) {
+              <div
+                class="proposta-form__anexos-row"
+                [class.proposta-form__anexos-row--selected]="anexoSelecionadoId() === anexo.id"
+                (click)="selecionarAnexo(anexo.id)"
+              >
+                <span class="proposta-form__anexos-col proposta-form__anexos-col--nome">
+                  <lucide-angular name="file-text" [size]="16" [strokeWidth]="2" />
+                  {{ anexo.nome }}
+                </span>
+                <span class="proposta-form__anexos-col proposta-form__anexos-col--tamanho">{{ anexo.tamanho }}</span>
+                <span class="proposta-form__anexos-col proposta-form__anexos-col--data">{{ anexo.dataUpload }}</span>
+                <span class="proposta-form__anexos-col proposta-form__anexos-col--versao">v{{ anexo.versao }}</span>
+              </div>
+            }
+          </div>
+        }
+      </app-card>
+
+      <!-- Botões Step 2 -->
+      <div class="proposta-form__actions">
+        <app-button variant="outline" (clicked)="voltar()">
+          <lucide-angular name="arrow-left" [size]="16" [strokeWidth]="2" />
+          Voltar
+        </app-button>
+        <app-button variant="default" (clicked)="avancar()">
+          Avançar
+          <lucide-angular name="arrow-right" [size]="16" [strokeWidth]="2" />
+        </app-button>
+      </div>
+    </div>
+  }
+
+  <!-- ════════════════════════════════════════════════════════════
+       STEP 3: Serviços e Parâmetros
+       ════════════════════════════════════════════════════════════ -->
+  @if (currentStep() === 2) {
+    <div class="proposta-form__step">
+
+      <div class="proposta-form__step-header">
+        <h2 class="proposta-form__step-title">Serviços e Parâmetros</h2>
+        <p class="proposta-form__step-description">
+          Configure as amostras, parâmetros de análise e valores da proposta.
+        </p>
+      </div>
+
+      <!-- Card: Coleta -->
+      <app-card>
+        <div appCardHeader>
+          <h2 class="proposta-form__card-title">Coleta</h2>
+        </div>
+
+        <div class="proposta-form__grid proposta-form__grid--2">
+          <app-select
+            label="Responsável pela coleta"
+            [options]="responsavelColetaOptions"
+            [(value)]="responsavelColeta"
+          />
+        </div>
+
+        <div class="proposta-form__instrucoes-coleta">
+          <span class="proposta-form__label">Instruções de coleta</span>
+          <div class="proposta-form__checkbox-list">
+            @for (instrucao of instrucoesColetaOpcoes; track instrucao.value) {
+              <app-checkbox
+                [label]="instrucao.label"
+                [checked]="isInstrucaoSelecionada(instrucao.value)"
+                (checkedChange)="toggleInstrucao(instrucao.value)"
+              />
+            }
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Card: Amostras -->
+      <app-card>
+        <div appCardHeader>
+          <div class="proposta-form__card-header-row">
+            <h2 class="proposta-form__card-title">Amostras</h2>
+            <div class="proposta-form__card-header-actions">
+              <app-button variant="default" size="sm" (clicked)="abrirNovaAmostra()">
+                <lucide-angular name="plus" [size]="14" [strokeWidth]="2" />
+                Adicionar Amostra
+              </app-button>
+              <app-button variant="outline" size="sm" (clicked)="removerAmostra()">
+                <lucide-angular name="trash-2" [size]="14" [strokeWidth]="2" />
+                Remover
+              </app-button>
+            </div>
+          </div>
+        </div>
+
+        @if (amostras().length === 0) {
+          <div class="proposta-form__empty-state">
+            <lucide-angular name="package" [size]="40" [strokeWidth]="1.5" />
+            <p>Nenhuma amostra adicionada.</p>
+            <span>Clique em "Adicionar Amostra" para configurar os serviços da proposta.</span>
+          </div>
+        } @else {
+          <div class="proposta-form__amostras-list">
+            @for (amostra of amostras(); track amostra.id) {
+              <div
+                class="proposta-form__amostra-item"
+                [class.proposta-form__amostra-item--selected]="amostraSelecionadaId() === amostra.id"
+                [class.proposta-form__amostra-item--expanded]="amostraExpandidaId() === amostra.id"
+              >
+                <div class="proposta-form__amostra-row" (click)="selecionarAmostra(amostra.id)">
+                  <div class="proposta-form__amostra-info">
+                    <button
+                      class="proposta-form__amostra-expand"
+                      (click)="toggleExpandirAmostra(amostra.id); $event.stopPropagation()"
+                    >
+                      {{ amostraExpandidaId() === amostra.id ? '▼' : '▶' }}
+                    </button>
+                    <div class="proposta-form__amostra-details">
+                      <strong>{{ amostra.identificacao }}</strong>
+                      <span class="proposta-form__amostra-meta">
+                        {{ getMatrizLabel(amostra.matriz) }}
+                        · {{ amostra.parametros.length }} parâmetros
+                        · {{ formatCurrency(amostra.subtotal) }}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="proposta-form__amostra-actions">
+                    <app-button variant="ghost" size="sm" (clicked)="abrirEditarAmostra(amostra); $event.stopPropagation()">
+                      <lucide-angular name="pencil" [size]="14" [strokeWidth]="2" />
+                      Editar
+                    </app-button>
+                  </div>
+                </div>
+
+                @if (amostraExpandidaId() === amostra.id) {
+                  <div class="proposta-form__parametros-detail">
+                    <div class="proposta-form__parametros-header">
+                      <span class="proposta-form__param-col proposta-form__param-col--nome">Parâmetro</span>
+                      <span class="proposta-form__param-col proposta-form__param-col--lq">LQ</span>
+                      <span class="proposta-form__param-col proposta-form__param-col--unidade">Unidade</span>
+                      <span class="proposta-form__param-col proposta-form__param-col--preco">Preço</span>
+                    </div>
+                    @for (param of amostra.parametros; track param.id) {
+                      <div class="proposta-form__parametros-row">
+                        <span class="proposta-form__param-col proposta-form__param-col--nome">{{ param.nome }}</span>
+                        <span class="proposta-form__param-col proposta-form__param-col--lq">{{ param.lq }}</span>
+                        <span class="proposta-form__param-col proposta-form__param-col--unidade">{{ param.unidade }}</span>
+                        <span class="proposta-form__param-col proposta-form__param-col--preco">{{ formatCurrency(param.preco) }}</span>
+                      </div>
+                    }
+                    <div class="proposta-form__parametros-footer">
+                      <strong>Subtotal: {{ formatCurrency(amostra.subtotal) }}</strong>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        }
+      </app-card>
+
+      <!-- Card: Totais -->
+      @if (amostras().length > 0) {
+        <app-card>
+          <div appCardHeader>
+            <h2 class="proposta-form__card-title">Valores</h2>
+          </div>
+
+          <div class="proposta-form__totais">
+            <div class="proposta-form__totais-row">
+              <span>Subtotal das amostras</span>
+              <strong>{{ formatCurrency(valorTotalAmostras()) }}</strong>
+            </div>
+            <div class="proposta-form__totais-row proposta-form__totais-row--desconto">
+              <div class="proposta-form__desconto-input">
+                <app-input
+                  label="Desconto global (%)"
+                  type="number"
+                  placeholder="0"
+                  [value]="descontoGlobal().toString()"
+                  (valueChange)="descontoGlobal.set(+$event)"
+                />
+              </div>
+              <span>- {{ formatCurrency(valorTotalAmostras() - valorComDesconto()) }}</span>
+            </div>
+            <div class="proposta-form__totais-row proposta-form__totais-row--total">
+              <span>Total da proposta</span>
+              <strong>{{ formatCurrency(valorComDesconto()) }}</strong>
+            </div>
+          </div>
+        </app-card>
+      }
+
+      <!-- Botões Step 3 -->
+      <div class="proposta-form__actions">
+        <app-button variant="outline" (clicked)="voltar()">
+          <lucide-angular name="arrow-left" [size]="16" [strokeWidth]="2" />
+          Voltar
+        </app-button>
+        <app-button variant="default" (clicked)="avancar()">
+          Avançar
+          <lucide-angular name="arrow-right" [size]="16" [strokeWidth]="2" />
+        </app-button>
+      </div>
+    </div>
+  }
+
+  <!-- ════════════════════════════════════════════════════════════
+       STEP 4: Revisão
+       ════════════════════════════════════════════════════════════ -->
+  @if (currentStep() === 3) {
+    <div class="proposta-form__step">
+
+      <div class="proposta-form__step-header">
+        <h2 class="proposta-form__step-title">Revisão da Proposta</h2>
+        <p class="proposta-form__step-description">
+          Revise todas as informações antes de salvar. Clique em "Voltar" para corrigir qualquer dado.
+        </p>
+      </div>
+
+      <!-- Card: Resumo Geral -->
+      <app-card>
+        <div appCardHeader>
+          <h2 class="proposta-form__card-title">Resumo Geral</h2>
+        </div>
+
+        <div class="proposta-form__review-grid">
+          <div class="proposta-form__review-item">
+            <span class="proposta-form__review-label">Nº Proposta</span>
+            <span class="proposta-form__review-value">{{ numeroProposta() }}</span>
+          </div>
+          <div class="proposta-form__review-item">
+            <span class="proposta-form__review-label">Status</span>
+            <app-badge [variant]="getStatusVariant()" [text]="status()" size="sm" />
+          </div>
+          <div class="proposta-form__review-item">
+            <span class="proposta-form__review-label">Data Criação</span>
+            <span class="proposta-form__review-value">{{ dataCriacao() }}</span>
+          </div>
+          <div class="proposta-form__review-item">
+            <span class="proposta-form__review-label">Data Validade</span>
+            <span class="proposta-form__review-value">{{ dataValidade() }}</span>
+          </div>
+          @if (clienteSelecionado(); as cliente) {
+            <div class="proposta-form__review-item">
+              <span class="proposta-form__review-label">Cliente</span>
+              <span class="proposta-form__review-value">{{ cliente.nome }}</span>
+            </div>
+          }
+          <div class="proposta-form__review-item">
+            <span class="proposta-form__review-label">Responsável pela coleta</span>
+            <span class="proposta-form__review-value">{{ getResponsavelColetaLabel(responsavelColeta()) }}</span>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Card: Amostras e Parâmetros -->
+      @if (amostras().length > 0) {
+        <app-card>
+          <div appCardHeader>
+            <h2 class="proposta-form__card-title">Amostras e Parâmetros</h2>
+          </div>
+
+          <div class="proposta-form__review-amostras">
+            @for (amostra of amostras(); track amostra.id; let i = $index) {
+              <div class="proposta-form__review-amostra">
+                <div class="proposta-form__review-amostra-header">
+                  <strong>{{ i + 1 }}. {{ amostra.identificacao }}</strong>
+                  <span>{{ getMatrizLabel(amostra.matriz) }} · {{ amostra.parametros.length }} parâmetros · {{ formatCurrency(amostra.subtotal) }}</span>
+                </div>
+                <div class="proposta-form__review-params">
+                  @for (param of amostra.parametros; track param.id) {
+                    <span class="proposta-form__review-param-tag">{{ param.nome }}</span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </app-card>
+      }
+
+      <!-- Card: Valores -->
+      <app-card>
+        <div appCardHeader>
+          <h2 class="proposta-form__card-title">Valores</h2>
+        </div>
+
+        <div class="proposta-form__totais">
+          <div class="proposta-form__totais-row">
+            <span>Subtotal das amostras</span>
+            <strong>{{ formatCurrency(valorTotalAmostras()) }}</strong>
+          </div>
+          @if (descontoGlobal() > 0) {
+            <div class="proposta-form__totais-row">
+              <span>Desconto ({{ descontoGlobal() }}%)</span>
+              <span>- {{ formatCurrency(valorTotalAmostras() - valorComDesconto()) }}</span>
+            </div>
+          }
+          <div class="proposta-form__totais-row proposta-form__totais-row--total">
+            <span>Total da proposta</span>
+            <strong>{{ formatCurrency(valorComDesconto()) }}</strong>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Card: Condições Comerciais -->
+      <app-card>
+        <div appCardHeader>
+          <h2 class="proposta-form__card-title">Condições Comerciais</h2>
+        </div>
+
+        <div class="proposta-form__review-grid">
+          <div class="proposta-form__review-item">
+            <span class="proposta-form__review-label">Condições de pagamento</span>
+            <span class="proposta-form__review-value">{{ getCondicaoPagamentoLabel(condicaoPagamento()) }}</span>
+          </div>
+          <div class="proposta-form__review-item">
+            <span class="proposta-form__review-label">Validade da proposta</span>
+            <span class="proposta-form__review-value">{{ dataValidade() }}</span>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Card: Análise Crítica -->
+      <app-card>
+        <div appCardHeader>
+          <div class="proposta-form__card-header-row">
+            <h2 class="proposta-form__card-title">Análise Crítica</h2>
+            @if (analiseCriticaPreenchida()) {
+              <app-badge variant="success" text="Preenchida" size="sm" />
+            } @else {
+              <app-badge variant="warning" text="Pendente" size="sm" />
+            }
+          </div>
+        </div>
+
+        <div class="proposta-form__review-analise">
+          @for (pergunta of analiseCritica(); track pergunta.texto; let i = $index) {
+            <div class="proposta-form__review-analise-item">
+              <span>{{ i + 1 }}. {{ pergunta.texto }}</span>
+              @if (pergunta.resposta === 'sim') {
+                <app-badge variant="success" text="Sim" size="sm" />
+              } @else if (pergunta.resposta === 'nao') {
+                <app-badge variant="danger" text="Não" size="sm" />
+              } @else if (pergunta.resposta === 'na') {
+                <app-badge variant="neutral" text="N/A" size="sm" />
+              } @else {
+                <app-badge variant="warning" text="—" size="sm" />
+              }
+            </div>
+          }
+        </div>
+      </app-card>
+
+      <!-- Botões Step 4 -->
+      <div class="proposta-form__actions">
+        <app-button variant="outline" (clicked)="voltar()">
+          <lucide-angular name="arrow-left" [size]="16" [strokeWidth]="2" />
+          Voltar
+        </app-button>
+        <app-button variant="ghost" (clicked)="salvar(false)">
+          <lucide-angular name="save" [size]="16" [strokeWidth]="2" />
+          Salvar Rascunho
+        </app-button>
+        <app-button variant="default" (clicked)="salvar(true)">
+          <lucide-angular name="save" [size]="16" [strokeWidth]="2" />
+          @if (mode === 'editar') { Salvar e Finalizar } @else { Criar Proposta }
+        </app-button>
+      </div>
+    </div>
+  }
+
+  <!-- -- Modal: Análise Crítica ------------------------------- -->
+  <app-modal
+    [isOpen]="analiseCriticaModalOpen()"
+    title="Análise Crítica — ISO/IEC 17025:2017"
+    size="lg"
+    (closed)="fecharAnaliseCritica()"
+  >
+    <p class="proposta-form__step-description" style="margin: 0 0 16px;">
+      Avalie se o laboratório tem capacidade de atender esta proposta conforme requisitos da norma.
+    </p>
+
+    <div class="proposta-form__analise-list">
+      @for (pergunta of analiseCritica(); track pergunta.texto; let i = $index) {
+        <div class="proposta-form__analise-item">
+          <p class="proposta-form__analise-texto">
+            <span class="proposta-form__analise-numero">{{ i + 1 }}.</span>
+            {{ pergunta.texto }}
+          </p>
+          <div class="proposta-form__radio-group">
+            <label class="proposta-form__radio" [class.proposta-form__radio--selected]="getResposta(i) === 'sim'">
+              <input
+                type="radio"
+                [name]="'analise-' + i"
+                [checked]="getResposta(i) === 'sim'"
+                (change)="setResposta(i, 'sim')"
+              />
+              <span class="proposta-form__radio-label">Sim</span>
+            </label>
+            <label class="proposta-form__radio" [class.proposta-form__radio--selected]="getResposta(i) === 'nao'">
+              <input
+                type="radio"
+                [name]="'analise-' + i"
+                [checked]="getResposta(i) === 'nao'"
+                (change)="setResposta(i, 'nao')"
+              />
+              <span class="proposta-form__radio-label">Não</span>
+            </label>
+            <label class="proposta-form__radio" [class.proposta-form__radio--selected]="getResposta(i) === 'na'">
+              <input
+                type="radio"
+                [name]="'analise-' + i"
+                [checked]="getResposta(i) === 'na'"
+                (change)="setResposta(i, 'na')"
+              />
+              <span class="proposta-form__radio-label">Não aplicável</span>
+            </label>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div appModalFooter>
+      <app-button variant="default" size="sm" (clicked)="fecharAnaliseCritica()">Fechar</app-button>
+    </div>
+  </app-modal>
+
+  <!-- -- Modal: Adicionar/Editar Amostra ---------------------- -->
+  <app-modal
+    [isOpen]="amostraModalOpen()"
+    [title]="amostraEditandoId() ? 'Editar Amostra' : 'Nova Amostra'"
+    size="lg"
+    (closed)="amostraModalOpen.set(false)"
+  >
+    <div class="proposta-form__grid proposta-form__grid--2">
+      <app-input
+        label="Identificação da amostra"
+        placeholder="Ex: Ponto P1 — Entrada ETA"
+        [(value)]="amostraIdentificacao"
+        [required]="true"
+      />
+      <app-input
+        label="Ponto de coleta"
+        placeholder="Ex: Coordenada / Local"
+        [(value)]="amostraPontoColeta"
+      />
+    </div>
+
+    <div class="proposta-form__grid proposta-form__grid--3">
+      <app-select
+        label="Matriz"
+        placeholder="Selecione a matriz..."
+        [options]="matrizOptions"
+        [(value)]="amostraMatriz"
+      />
+      <app-select
+        label="Grupo de ensaio"
+        placeholder="Selecione o grupo..."
+        [options]="grupoOptions"
+        [(value)]="amostraGrupo"
+      />
+      <app-select
+        label="Legislação"
+        placeholder="Selecione a legislação..."
+        [options]="legislacaoOptions"
+        [(value)]="amostraLegislacao"
+      />
+    </div>
+
+    <div class="proposta-form__grid proposta-form__grid--3">
+      <app-select
+        label="Tabela de preço"
+        [options]="tabelaPrecoOptions"
+        [(value)]="amostraTabelaPreco"
+      />
+      <app-select
+        label="Preservação"
+        placeholder="Selecione..."
+        [options]="preservacaoOptions"
+        [(value)]="amostraPreservacao"
+      />
+      <app-select
+        label="Recipiente"
+        placeholder="Selecione..."
+        [options]="recipienteOptions"
+        [(value)]="amostraRecipiente"
+      />
+    </div>
+
+    <!-- Seleção de parâmetros -->
+    <div class="proposta-form__param-selection">
+      <div class="proposta-form__param-selection-header">
+        <span class="proposta-form__label">Parâmetros de análise</span>
+        <app-button variant="outline" size="sm" (clicked)="abrirPacotes()">
+          <lucide-angular name="package" [size]="14" [strokeWidth]="2" />
+          Aplicar Pacote
+        </app-button>
+      </div>
+
+      <div class="proposta-form__param-grid">
+        @for (param of parametrosFiltrados(); track param.id) {
+          <label
+            class="proposta-form__param-checkbox"
+            [class.proposta-form__param-checkbox--checked]="isParametroSelecionado(param.id)"
+          >
+            <app-checkbox
+              [label]="param.nome"
+              [checked]="isParametroSelecionado(param.id)"
+              (checkedChange)="toggleParametro(param.id)"
+            />
+            <span class="proposta-form__param-price">{{ formatCurrency(param.preco) }}</span>
+          </label>
+        }
+      </div>
+
+      @if (amostraParametrosSelecionados().length > 0) {
+        <div class="proposta-form__param-summary">
+          <span>{{ amostraParametrosSelecionados().length }} parâmetros selecionados</span>
+        </div>
+      }
+    </div>
+
+    <div appModalFooter>
+      <app-button variant="outline" size="sm" (clicked)="amostraModalOpen.set(false)">Cancelar</app-button>
+      <app-button variant="default" size="sm" (clicked)="salvarAmostra()">
+        {{ amostraEditandoId() ? 'Salvar Alterações' : 'Adicionar Amostra' }}
+      </app-button>
+    </div>
+  </app-modal>
+
+  <!-- -- Modal: Pacotes de Serviço ---------------------------- -->
+  <app-modal
+    [isOpen]="pacoteModalOpen()"
+    title="Pacotes de Serviço"
+    size="md"
+    (closed)="pacoteModalOpen.set(false)"
+  >
+    <p class="proposta-form__step-description" style="margin: 0 0 16px;">
+      Selecione um pacote para adicionar automaticamente os parâmetros correspondentes à amostra.
+    </p>
+
+    <div class="proposta-form__pacotes-list">
+      @for (pacote of pacotesDisponiveis; track pacote.id) {
+        <div class="proposta-form__pacote-item">
+          <div class="proposta-form__pacote-info">
+            <strong>{{ pacote.nome }}</strong>
+            <span>{{ pacote.descricao }}</span>
+            <span class="proposta-form__pacote-count">{{ pacote.parametroIds.length }} parâmetros</span>
+          </div>
+          <app-button variant="outline" size="sm" (clicked)="aplicarPacote(pacote.parametroIds)">
+            Aplicar
+          </app-button>
+        </div>
+      }
+    </div>
+
+    <div appModalFooter>
+      <app-button variant="outline" size="sm" (clicked)="pacoteModalOpen.set(false)">Fechar</app-button>
+    </div>
+  </app-modal>
+
+  <!-- -- Modal: Dirty check ----------------------------------- -->
+  <app-modal
+    [isOpen]="confirmModalOpen()"
+    title="Alterações não salvas"
+    size="sm"
+    (closed)="cancelarSaida()"
+  >
+    <p style="margin: 0; color: #4B5563; font-size: 14px; line-height: 1.5;">
+      Você tem alterações não salvas. Deseja sair sem salvar?
+    </p>
+    <div appModalFooter>
+      <app-button variant="outline" size="sm" (clicked)="cancelarSaida()">Continuar editando</app-button>
+      <app-button variant="default" size="sm" (clicked)="confirmarSaida()">Sair sem salvar</app-button>
+    </div>
+  </app-modal>
+</div>

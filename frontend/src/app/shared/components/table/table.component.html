@@ -59,6 +59,7 @@
             [class.table__row--selected]="isSelected(i)"
             tabindex="0"
             (click)="onRowClick(row, i)"
+            (dblclick)="onRowDoubleClick(row, i)"
             (keydown.enter)="onRowClick(row, i)"
           >
             @if (selectable()) {

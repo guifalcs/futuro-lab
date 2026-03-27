@@ -9,6 +9,11 @@ const config: StorybookConfig = {
     "@storybook/addon-a11y",
     "@storybook/addon-docs"
   ],
-  "framework": "@storybook/angular"
+  "framework": {
+    "name": "@storybook/angular",
+    "options": {
+      "angularBrowserTarget": "status-contabilidade:build"
+    }
+  }
 };
 export default config;

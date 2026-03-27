@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { FooterComponent } from '../footer/footer.component';
+import { NAV_MODULES } from '../../core/config/navigation.config';
 
 @Component({
   selector: 'app-main-layout',
@@ -56,9 +57,9 @@ export class MainLayoutComponent implements OnInit {
     return this.resolvedSidebarItems();
   });
 
-  // Header Mock Data
-  navItems = signal([] as { label: string; route: string; icon: string }[]);
-  userName = signal('Sirlene Sales');
+  // Header Data
+  navItems = signal(NAV_MODULES.map((m) => ({ label: m.label, route: m.route, icon: m.icon })));
+  userName = signal('Barôncio Cabral');
   userAvatar = signal('');
   logoSrc = signal('assets/images/logo.webp');
   activeRoute = signal<string>('');

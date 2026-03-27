@@ -18,7 +18,7 @@
   [attr.required]="required() ? '' : null"
   [attr.aria-invalid]="hasError() ? true : null"
   [attr.aria-describedby]="hasError() ? inputId + '-error' : null"
-  [attr.maxlength]="maxLength() ?? null"
+  [attr.maxlength]="effectiveMaxLength() ?? null"
   [value]="value()"
   (input)="onInput($event)"
   (focus)="onFocus()"

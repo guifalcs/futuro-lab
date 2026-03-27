@@ -33,6 +33,7 @@ export class TableComponent {
   currentPage = model<number>(1);
 
   rowClick = output<{ row: Record<string, unknown>; index: number }>();
+  rowDoubleClick = output<{ row: Record<string, unknown>; index: number }>();
   selectionChange = output<number[]>();
   pageChange = output<number>();
   pageSizeChange = output<number>();
@@ -95,6 +96,18 @@ export class TableComponent {
 
   onRowClick(row: Record<string, unknown>, index: number): void {
     this.rowClick.emit({ row, index });
+    if (this.selectable()) {
+      const current = this.selectedRows();
+      if (current.includes(index)) {
+        this.selectionChange.emit(current.filter((i) => i !== index));
+      } else {
+        this.selectionChange.emit([...current, index]);
+      }
+    }
+  }
+
+  onRowDoubleClick(row: Record<string, unknown>, index: number): void {
+    this.rowDoubleClick.emit({ row, index });
   }
 
   toggleAll(event: MouseEvent): void {
